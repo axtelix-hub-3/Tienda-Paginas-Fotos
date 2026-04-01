@@ -1,0 +1,7 @@
+node_modules
+.git
+.github
+*.jpg
+*.png
+*.jpeg
+*.webp

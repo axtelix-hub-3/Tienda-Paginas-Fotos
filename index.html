@@ -1,0 +1,4029 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Axtelix | Premium Store</title>
+    <link rel="icon" type="image/x-icon" href="logo-wp.jpeg">
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Axtelix | Premium Store">
+    <meta property="og:description" content="Tu tienda premium de perfumería y accesorios. Calidad garantizada.">
+    <meta property="og:image" content="https://axtelix-oficial.github.io/Axtelix/logo-wp.jpeg">
+    <meta property="og:url" content="https://axtelix-oficial.github.io/Axtelix/">
+    <meta name="twitter:card" content="summary_large_image">
+
+
+    <style>
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: 'Helvetica', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        #social-proof {
+    position: fixed;
+    bottom: 20px;
+    left: -300px; /* Escondido al inicio */
+    background: rgba(20, 20, 20, 0.9);
+    border-left: 4px solid #d4af37;
+    color: white;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    z-index: 9999;
+    transition: left 0.5s ease-in-out;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+        /* Estado Agotado */
+        .product-card.sold-out {
+            opacity: 0.7;
+            filter: grayscale(0.8);
+            pointer-events: none; /* Evita que sigan dando clic */
+        }
+
+        .badge-agotado {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            background: #444; /* Gris oscuro para diferenciar de la oferta roja */
+            color: white;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            transform: skewX(7deg); /* Para que el texto se vea derecho en la tarjeta ladeada */
+        }
+
+        /* Estilo del botón cuando está agotado */
+        .product-card.sold-out .btn-add-cart {
+            background-color: #333 !important;
+            color: #777 !important;
+            cursor: not-allowed;
+        }
+
+
+        /* Clase para ocultar productos en el buscador */
+        .product-card.hidden {
+            display: none !important;
+        }
+
+
+        /* --- SMART LIFE GEAR (AHORA DEBAJO DE AXTELIX) --- */
+        .slogan-animado {
+            font-size: 0.7em;
+            color: #888;
+            letter-spacing: 2px;
+            display: block; /* Cambiado a block para estar debajo */
+            margin-top: 5px;
+            transition: all 0.5s ease;
+            cursor: default;
+        }
+
+        .slogan-animado:hover {
+            letter-spacing: 6px;
+            color: #d4af37;
+        }
+
+        .slogan-animado span {
+            display: inline-block;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slogan-animado:hover span {
+            animation: salto-giro-completo 0.8s ease forwards, 
+                       parpadeo-contorno 1s infinite alternate;
+        }
+
+        @keyframes salto-giro-completo {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+
+        @keyframes parpadeo-contorno {
+            from { text-shadow: 0 0 2px #fff, 0 0 5px #d4af37; }
+            to { text-shadow: 0 0 8px #d4af37, 0 0 15px #d4af37; }
+        }
+
+        header {
+            padding: 40px 20px 10px 20px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        header h1 {
+            display: inline-block;
+            margin: 0;
+            padding: 5px 30px;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            letter-spacing: 5px;
+            border-radius: 50px;
+            position: relative;
+        }
+
+        header h1:hover {
+            letter-spacing: 15px; 
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.8);
+            color: #d4af37;
+            animation: glow-pulse 1.5s infinite;
+        }
+
+        @keyframes glow-pulse {
+            0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.9); }
+            100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
+        }
+
+        /* --- BUSCADOR CON LUPA FELIZ --- */
+        .search-wrapper {
+            max-width: 400px;
+            margin: 20px auto;
+            position: relative;
+            padding: 0 20px;
+        }
+
+        #productSearch {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 25px;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            color: white;
+            outline: none;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #productSearch:focus { 
+            border-color: #d4af37;
+            letter-spacing: 1px;
+        }
+
+        .lupa-emoji {
+            position: absolute;
+            right: 35px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        /* Animación de la lupa al dar click */
+        .lupa-feliz {
+            animation: salto-giro-lupa 0.7s ease-out forwards;
+        }
+
+        @keyframes salto-giro-lupa {
+            0% { transform: translateY(-50%) scale(1) rotate(0deg); }
+            30% { transform: translateY(-100%) scale(1.5) rotate(0deg); }
+            100% { transform: translateY(-50%) scale(1) rotate(360deg); }
+        }
+
+        /* --- CARRITO Y BOTONES DENTRO DEL MODAL --- */
+        .cupon-wrapper:hover {
+            border-color: #d4af37;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            transition: 0.3s;
+        }
+
+        .btn-cupon:hover {
+            animation: parpadeo-contorno 1s infinite alternate;
+        }
+
+        .btn-whatsapp-cart {
+            background: #25d366;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            letter-spacing: 0px;
+        }
+
+        /* Efecto de letras separadas y brillo suave */
+        .btn-whatsapp-cart:hover {
+            letter-spacing: 2px;
+            background: #20ba5a;
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
+            border-color: #fff;
+        }
+
+
+        /* Estilos para botones en mantenimiento */
+.btn-mantenimiento {
+    background: #e0e0e0 !important;
+    color: #888 !important;
+    cursor: not-allowed !important;
+    position: relative;
+    pointer-events: none; /* Evita que hagan clic */
+}
+
+.badge-mantenimiento {
+    position: absolute;
+    top: -8px;
+    right: 10px;
+    background: #ff4444;
+    color: white;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Diseño de tarjeta bancaria profesional */
+.banco-card {
+    background: #f8f9fa;
+    border: 1.5px dashed #ccc;
+    border-radius: 15px;
+    padding: 15px;
+    margin-top: 10px;
+    text-align: left;
+}
+
+.banco-dato {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.banco-valor {
+    font-family: monospace;
+    font-size: 15px;
+    font-weight: bold;
+    color: #111;
+}
+
+
+
+        /* --- CATEGORÍAS Y PRODUCTOS --- */
+        .category-title {
+            text-align: center;
+            letter-spacing: 3px;
+            margin-top: 40px;
+            color: #d4af37;
+            text-transform: uppercase;
+            font-size: 1.1em;
+            transition: all 0.4s ease;
+            cursor: default;
+        }
+
+        .category-title:hover {
+            letter-spacing: 8px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .cart-icon-fixed {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #d4af37;
+            color: black;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .cart-pop {
+            animation: pop-animation 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #ffffff !important; 
+        }
+
+        @keyframes pop-animation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.6); box-shadow: 0 0 40px #d4af37; }
+            100% { transform: scale(1); }
+        }
+
+
+        @media (max-width: 768px) {
+    .container {
+        overflow-x: auto; 
+        /* 'mandatory' obliga a que el scroll se detenga en un producto sí o sí */
+        scroll-snap-type: x mandatory; 
+        -webkit-overflow-scrolling: touch; 
+        gap: 15px;
+        padding: 10px;
+        /* IMPORTANTE: El contenedor debe tener el scroll oculto si usas flechas, 
+           o auto si quieres que usen el dedo */
+    }
+
+    @media (max-width: 768px) {
+    .product-card {
+        /* Subimos del 85% al 92% para que ocupe casi toda la pantalla */
+        flex: 0 0 92% !important; 
+        min-width: 92% !important;
+        
+        /* Asegúrate de que el margen no las empuje */
+        margin: 0 auto; 
+        
+        scroll-snap-align: center;
+        scroll-snap-stop: always;
+    }
+}
+    
+    .arrow-btn {
+        display: none; /* En móvil es mejor usar el dedo, pero si las dejas, 
+                          el JS que te pasé antes hará el salto exacto */
+    }
+}
+
+
+/* Esto hace que el efecto funcione con el mouse Y TAMBIÉN con la clase .active */
+
+/* El Borde Dorado */
+.product-card.active::before, 
+.product-card:hover::before {
+    clip-path: inset(0 0 0 0) !important;
+}
+
+/* La Imagen (Color y brillo) */
+.product-card.active img,
+.product-card:hover img {
+    filter: grayscale(0%) brightness(100%) !important;
+}
+
+/* El texto o botón (si quieres que cambie) */
+.product-card.active .btn-add-cart {
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+
+        .slider-wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto 40px auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            overflow-x: hidden;
+            gap: 20px;
+            padding: 20px 0;
+            width: 100%;
+        }
+
+        /* 1. Contenedor: Solo 3 productos visibles con buen espacio */
+        .product-grid {
+            display: flex;
+            gap: 80px; /* Mucho espacio para que no se peguen los rayos */
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        /* 1. LA TARJETA: Le quitamos el clip-path y el overflow:hidden */
+        .product-card {
+            flex: 0 0 300px;
+            height: 520px; /* Dale un poco más de altura para que quepa todo abajo */
+            position: relative;
+            background: transparent; /* Para que el fondo no tape nada */
+            overflow: visible; /* IMPORTANTE: para que la oferta y botones se vean */
+            transition: all 0.5s ease;
+        }
+
+        /* 1.1 EL BORDE DORADO DE CARGA */
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 2px solid #f1c40f;
+            z-index: 10;
+            pointer-events: none;
+            clip-path: inset(0 100% 100% 0);
+            transition: clip-path 0.7s ease-in-out;
+        }
+
+        .product-card:hover::before {
+            clip-path: inset(0 0 0 0);
+        }
+
+        .product-card:hover img {
+            filter: grayscale(0%) brightness(100%);
+        }
+
+        /* 2. LA IMAGEN: Aquí es donde aplicamos el recorte de Rayo */
+        .product-card img {
+            width: 100%;
+            height: 300px; /* Ajusta la altura de la foto */
+            object-fit: cover;
+            /* Movemos el recorte de rayo solo a la foto */
+            clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 50% 100%, 0% 80%);
+            filter: grayscale(100%) brightness(30%);
+            transition: all 0.6s ease;
+        }
+
+        .product-card:hover img {
+            filter: grayscale(0%) brightness(100%);
+        }
+
+        /* 3. MOVER LA OFERTA PARA QUE NO TAPE EL NOMBRE */
+        .badge-oferta {
+            position: absolute;
+            top: -10px; /* Súbela arriba de la foto */
+            left: 10px;
+            z-index: 50; 
+            background: #ff4d4d;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            color: white;
+        }
+
+        /* 4. BOTÓN Y DETALLES: Asegúrate que no tengan posición absoluta rara */
+        .product-info {
+            padding-top: 15px; /* Espacio después del rayo de la foto */
+            text-align: center;
+        }
+
+        .añadir-carrito {
+            display: block;
+            margin: 10px auto;
+            background: white;
+            color: black;
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .product-info h3 {
+            font-size: 0.9rem;
+            color: #f1c40f; /* Dorado para el nombre */
+        }
+
+        /* --- AJUSTE FINAL PARA MÓVIL (TODO CENTRADO Y ADAPTADO) --- */
+@media (max-width: 768px) {
+    /* 1. PRODUCTOS: Recuadros centrados */
+    .product-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 25px !important;
+        padding: 10px 0 !important;
+        overflow-x: hidden !important;
+    }
+
+    .product-card {
+        width: 90% !important; 
+        flex: none !important;
+        margin: 0 auto !important;
+    }
+
+    /* 2. CHECKOUT: Centrado y con márgenes iguales */
+    #capa-checkout {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0 !important;
+    }
+
+    #capa-checkout > div {
+        width: 90% !important; /* Margen igual en ambos lados */
+        margin: 0 auto !important;
+        padding: 20px 15px !important;
+        max-height: 88vh !important;
+        overflow-y: auto !important;
+        border-radius: 20px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Inputs y botones del Checkout */
+    #capa-checkout input, #capa-checkout textarea, #btn-next-step, #btn-wsp, #btn-descargar-img {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 16px !important;
+    }
+
+    /* 3. MANTENIMIENTO: El arreglo para que se vea igual de los dos lados */
+    #aviso-mantenimiento {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        z-index: 20000000 !important;
+    }
+
+    #aviso-mantenimiento > div {
+        width: 85% !important; /* Se adapta al centro con márgenes iguales */
+        max-width: 350px !important;
+        margin: 0 auto !important; /* Esto asegura que se vea igual de los dos lados */
+        padding: 30px 20px !important;
+        border-radius: 24px !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+    }
+}
+
+        .badge-oferta {
+            position: absolute;
+            /* 1. Súbela más para que salga del área del nombre */
+            top: -15px; 
+    
+            /* 2. Muévela a la izquierda o derecha según prefieras */
+            left: 10px; 
+    
+            /* 3. Asegúrate de que nada la tape */
+            z-index: 100; 
+    
+            /* Opcional: un sombreado para que resalte en el fondo negro */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    
+            /* Estilo visual rápido */
+            background-color: #ff4d4d;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .price { color: #d4af37; font-size: 1.2em; font-weight: bold; display: block; margin-bottom: 10px; }
+        
+        .old-price {
+            text-decoration: line-through;
+            color: #666;
+            font-size: 0.8em;
+            margin-right: 8px;
+        }
+
+        .btn-add-cart {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #000;
+            font-weight: bold;
+            font-size: 0.75em;
+            text-transform: uppercase;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+
+        .estrella-ambiente {
+    position: absolute;
+    pointer-events: none; /* Para que no interfieran con los clics */
+    z-index: -1; /* Detrás de todo */
+    opacity: 0;
+    color: #FFD700; /* Color dorado brillante para las estrellas */
+    font-size: 1.5rem; /* Tamaño inicial */
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7); /* Brillo alrededor */
+    transition: opacity 2s ease-in-out, transform 2s ease-in-out;
+    user-select: none;
+    line-height: 1; /* Para que no ocupe mucho espacio vertical */
+}
+
+/* Animación de una estrella que aparece, flota y se desvanece */
+@keyframes estrellaFlotante {
+    0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.5) rotate(0deg);
+    }
+    30% {
+        opacity: 0.7; /* Se ve más al inicio */
+    }
+    70% {
+        opacity: 0.4;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--float-x), var(--float-y)) scale(1.5) rotate(360deg);
+    }
+}
+
+
+
+        .btn-add-cart:active {
+            transform: scale(0.95);
+            background-color: #d4af37;
+        }
+
+        .btn-details {
+            background: transparent;
+            color: #888;
+            border: none;
+            text-decoration: underline;
+            font-size: 0.8em;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        /* 1. Animación de parpadeo que NUNCA se detiene */
+@keyframes breathing {
+    0%, 100% {
+        opacity: 0.2;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05); /* Un pulso muy sutil */
+    }
+}
+
+/* ==========================================================================
+   💎 AXTELIX CHECKOUT PROTOCOL | ULTIMATE LUXURY EDITION V7.4
+   ========================================================================== */
+
+/* --- LAS FLECHAS — CÍRCULO MINIMALISTA MODERNO --- */
+
+.arrow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+
+    /* Sin fondo — completamente transparente por defecto */
+    background: transparent;
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    color: var(--gold-primary);
+
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 4000;
+
+    transition:
+        border-color 0.3s ease,
+        color 0.3s ease,
+        transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        background 0.3s ease;
+
+    /* Sombra apenas perceptible */
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+}
+
+/* Anillo exterior que aparece en hover */
+.arrow-btn::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* Relleno de fondo que sube al hacer hover */
+.arrow-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(212,175,55,0.12) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* HOVER — explosión de glow dorado limpia */
+.arrow-btn:hover {
+    background: transparent;
+    border-color: var(--gold-primary);
+    color: #fff;
+    transform: translateY(-50%) scale(1.12);
+    box-shadow:
+        0 0 0 1px rgba(212, 175, 55, 0.2),
+        0 0 18px rgba(212, 175, 55, 0.55),
+        0 0 40px rgba(212, 175, 55, 0.2),
+        inset 0 0 12px rgba(212, 175, 55, 0.08);
+}
+
+.arrow-btn:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.arrow-btn:hover::after {
+    opacity: 1;
+}
+
+/* El ícono se mueve levemente en su dirección al hover */
+.arrow-btn.prev:hover i { transform: translateX(-2px); }
+.arrow-btn.next:hover i { transform: translateX(2px); }
+
+.arrow-btn i {
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    line-height: 1;
+}
+
+/* Click feedback */
+.arrow-btn:active {
+    transform: translateY(-50%) scale(0.95);
+    box-shadow:
+        0 0 10px rgba(212, 175, 55, 0.4),
+        inset 0 0 8px rgba(212, 175, 55, 0.1);
+}
+
+/* Posicionamiento — separados del producto */
+.arrow-btn.prev { left: -28px; }
+.arrow-btn.next { right: -28px; }
+
+
+/* ==========================================================================
+   TRUST SECTION — THE AUTHORITY GRID
+   ========================================================================== */
+.trust-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    padding: 90px 6%;
+    background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(212,175,55,0.06) 0%, transparent 60%),
+        radial-gradient(circle at top, #0d0d0d 0%, #000 100%);
+    position: relative;
+    border-top: 1px solid rgba(212, 175, 55, 0.15);
+    overflow: hidden;
+}
+
+.trust-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 15%; right: 15%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(212,175,55,0.5), transparent);
+}
+
+.trust-section::after {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 50%; height: 120px;
+    background: var(--gold-primary);
+    filter: blur(100px);
+    opacity: 0.07;
+    pointer-events: none;
+}
+
+.trust-item {
+    background: linear-gradient(145deg, rgba(18,15,5,0.8) 0%, rgba(10,10,10,0.6) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    border-radius: 22px;
+    padding: 38px 28px;
+    text-align: center;
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.trust-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 60px; height: 60px;
+    background: radial-gradient(circle at top left, rgba(212,175,55,0.15), transparent 70%);
+    border-radius: 22px 0 0 0;
+    transition: opacity 0.4s ease;
+}
+
+.trust-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 20%; right: 20%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(212,175,55,0.3), transparent);
+    transition: all 0.4s ease;
+}
+
+.trust-item:hover {
+    transform: translateY(-12px) scale(1.02);
+    border-color: rgba(212, 175, 55, 0.45);
+    background: linear-gradient(145deg, rgba(25,20,5,0.95) 0%, rgba(15,15,15,0.9) 100%);
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.85),
+        0 0 30px rgba(212, 175, 55, 0.12),
+        inset 0 1px 0 rgba(212, 175, 55, 0.1);
+}
+
+.trust-item:hover::after {
+    left: 10%; right: 10%;
+    background: linear-gradient(to right, transparent, rgba(212,175,55,0.6), transparent);
+}
+
+.trust-item h4 {
+    color: var(--gold-primary);
+    font-family: 'Syncopate', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 4px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.trust-item p {
+    color: #888;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    font-weight: 300;
+}
+
+
+/* ==========================================================================
+   🔥 MODAL — AXTELIX CART EXPERIENCE
+   ========================================================================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    width: 100vw; height: 100vh;
+    background-color: rgba(2, 2, 2, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    animation: modalFadeIn 0.4s ease-out forwards;
+}
+
+.modal-content {
+    background: linear-gradient(160deg, #0e0e0e 0%, #050505 60%, #0a0800 100%);
+    margin: 5vh auto;
+    padding: 45px;
+    width: 92%; max-width: 500px;
+    border-radius: 30px;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    box-shadow:
+        0 40px 80px rgba(0, 0, 0, 0.95),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        inset 0 1px 0 rgba(212, 175, 55, 0.15),
+        0 0 60px rgba(212, 175, 55, 0.08);
+    color: #e0e0e0;
+    transform: translateY(20px); opacity: 0;
+    animation: modalSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+}
+
+.modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 15%; right: 15%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(212,175,55,0.6), transparent);
+    border-radius: 1px;
+}
+
+.modal-content::-webkit-scrollbar { width: 4px; }
+.modal-content::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
+.modal-content::-webkit-scrollbar-thumb { background: var(--gold-primary); border-radius: 10px; box-shadow: 0 0 8px rgba(212,175,55,0.5); }
+
+/* --- CHECKOUT BUTTON --- */
+.btn-checkout-master {
+    width: 100%;
+    padding: 20px;
+    margin-top: 25px;
+    background: linear-gradient(90deg, #0d0d0d 0%, #181400 40%, #0d0d0d 100%);
+    border: 1px solid rgba(212, 175, 55, 0.6);
+    color: var(--gold-primary);
+    border-radius: 16px;
+    font-family: 'Syncopate', sans-serif;
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 4px; text-transform: uppercase;
+    cursor: pointer; position: relative; overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(212,175,55,0.15);
+}
+
+.btn-checkout-master::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212,175,55,0.35), transparent);
+    transition: left 0.55s ease;
+}
+
+.btn-checkout-master::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 20%; right: 20%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(212,175,55,0.5), transparent);
+    transition: all 0.4s ease;
+}
+
+.btn-checkout-master:hover {
+    background: linear-gradient(90deg, #d4af37 0%, #f3e5ab 50%, #c9a227 100%);
+    color: #000;
+    border-color: rgba(255,255,255,0.4);
+    transform: translateY(-3px);
+    letter-spacing: 5px;
+    box-shadow:
+        0 0 35px rgba(212,175,55,0.55),
+        0 0 80px rgba(212,175,55,0.15),
+        0 15px 35px rgba(0,0,0,0.7);
+}
+
+.btn-checkout-master:hover::before { left: 100%; }
+.btn-checkout-master:hover::after  { left: 5%; right: 5%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent); }
+
+/* --- INPUTS --- */
+.axt-modal-input {
+    width: 100%;
+    padding: 18px 20px;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    transition: all 0.35s ease;
+    margin-bottom: 15px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.axt-modal-input::placeholder { color: #444; }
+
+.axt-modal-input:focus {
+    border-color: rgba(212, 175, 55, 0.6);
+    background: rgba(212, 175, 55, 0.04);
+    box-shadow:
+        inset 0 0 20px rgba(212,175,55,0.07),
+        0 0 0 3px rgba(212,175,55,0.08);
+    outline: none;
+}
+
+
+/* ==========================================================================
+   KEYFRAMES
+   ========================================================================== */
+@keyframes modalFadeIn {
+    from { opacity: 0; backdrop-filter: blur(0px); }
+    to   { opacity: 1; backdrop-filter: blur(18px); }
+}
+
+@keyframes modalSlideUp {
+    from { transform: translateY(40px) scale(0.96); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+
+/* ==========================================================================
+   📱 MOBILE
+   ========================================================================== */
+@media (max-width: 768px) {
+    .trust-section { padding: 55px 20px; gap: 18px; }
+    .trust-item    { padding: 28px 18px; border-radius: 18px; }
+    .trust-item h4 { font-size: 0.8rem; letter-spacing: 2px; }
+
+    .modal-content {
+        width: 95%; margin: auto;
+        padding: 30px 22px;
+        border-radius: 26px;
+        max-height: 90vh;
+        padding-bottom: env(safe-area-inset-bottom, 30px);
+    }
+
+    .btn-checkout-master { padding: 18px; font-size: 10px; letter-spacing: 2px; }
+
+    .arrow-btn      { width: 44px; height: 44px; font-size: 13px; }
+    .arrow-btn.prev { left: 8px; }
+    .arrow-btn.next { right: 8px; }
+}
+
+        /* Fuerza a que el botón de detalles esté siempre al frente y sea clickeable */
+        .Detalles, [onclick*="abrirModal"], [onclick*="detalles"] {
+            position: relative !important;
+            z-index: 2147483647 !important; /* El máximo nivel posible */
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            display: inline-block !important;
+        }
+
+        /* Evita que el contenedor padre bloquee los clics al hijo */
+        .product-card.sold-out, .product-item.agotado {
+            pointer-events: auto !important; 
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        /* Este es el nombre del producto */
+        .cart-item span:first-child {
+            color: #ffffff; /* Blanco para el nombre */
+            flex: 1;
+        }
+
+        /* Este es el precio (el segundo span) */
+        .cart-item span:nth-child(2) {
+            color: #f1c40f; /* El dorado de tu marca */
+            font-weight: bold;
+            margin-right: 15px; /* Espacio antes de la X roja */
+            min-width: 70px;
+            text-align: right;
+        }
+
+        /* El nombre ocupará todo el espacio disponible */
+        .cart-item span:first-child {
+            flex-grow: 1;
+            text-align: left;
+            font-size: 0.95em;
+        }
+
+        /* El precio tendrá un ancho fijo para que todos los $ se alineen igual */
+        .cart-item span:nth-child(2) {
+            min-width: 80px; 
+            text-align: right;
+            font-weight: bold;
+            color: #d8e616; /* Dorado Axtelix */
+        }
+
+        .legal-link { color: #555; text-decoration: underline; cursor: pointer; font-size: 0.8em; margin: 0 10px; }
+
+        .cupon-wrapper {
+            margin: 15px 0;
+            padding: 15px;
+            background: #111;
+            border-radius: 8px;
+            border: 1px dashed #444;
+            transition: all 0.3s;
+        }
+        .cupon-input-group {
+            display: flex;
+            gap: 10px;
+        }
+        #input-cupon {
+            flex: 1;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background: #000;
+            color: white;
+        }
+        .btn-cupon {
+            background: #d4af37;
+            color: black;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+
+        /* Pantalla de carga AXTELIX */
+#loader-axtelix {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #0a0a0a; /* Fondo minimalista oscuro */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease;
+}
+
+.letras-contenedor {
+    display: flex;
+    gap: 10px;
+}
+
+.letra {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    animation: jugar 1.5s infinite alternate;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+#loader-axtelix {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Prioridad máxima */
+    overflow: hidden;
+}
+
+
+
+/* --- FONDO DE METEORITOS --- */
+.fondo-espacial {
+    position: absolute;
+    width: 100%; height: 100%;
+    z-index: 1;
+}
+
+.meteorito {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 3px; height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #00d4ff, 0 0 30px #00d4ff;
+    opacity: 0;
+    animation: lluvia-meteoritos var(--duracion) infinite linear var(--retraso);
+}
+
+@keyframes lluvia-meteoritos {
+    0% { transform: rotate(var(--angulo)) translateX(0) scaleX(1); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: rotate(var(--angulo)) translateX(1200px) scaleX(30); opacity: 0; }
+}
+
+/* --- CONTENIDO CENTRAL --- */
+.letras-contenedor {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 250px;
+}
+
+.logo-central {
+    width: 180px;
+    height: auto;
+    mix-blend-mode: screen; 
+    filter: brightness(1.2) contrast(1.4) drop-shadow(0 0 30px rgba(0, 212, 255, 0.8));
+    -webkit-mask-image: radial-gradient(circle, black 45%, transparent 80%);
+    mask-image: radial-gradient(circle, black 45%, transparent 80%);
+    animation: giro-motor 4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.letra {
+    position: absolute;
+    font-size: 5rem;
+    font-weight: 800;
+    color: #fff;
+    opacity: 0;
+    animation: disparo-con-flash 4s infinite;
+}
+
+@keyframes disparo-con-flash {
+    0% { transform: translateX(0) scale(0.3); opacity: 0; color: #00d4ff; filter: blur(20px); }
+    10% { opacity: 1; color: #fff; text-shadow: 0 0 20px #fff, 0 0 50px #00d4ff; }
+    85% { opacity: 1; transform: var(--destino) scale(1); }
+    100% { opacity: 0; transform: var(--destino) scale(0.8); }
+}
+
+/* --- TEXTOS Y CARGA --- */
+.lema-axtelix {
+    margin-top: 20px;
+    color: #00d4ff;
+    letter-spacing: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    z-index: 10;
+}
+
+.carga-contenedor {
+    margin-top: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+}
+
+.texto-cargando {
+    color: #00d4ff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+    animation: parpadeo-texto 1.5s infinite;
+}
+
+.barra-fondo {
+    width: 220px;
+    height: 5px;
+    background: rgba(0, 212, 255, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.barra-progreso {
+    width: 0%;
+    height: 100%;
+    background: #00d4ff;
+    box-shadow: 0 0 15px #00d4ff;
+    animation: progreso-sincro 4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes progreso-sincro {
+    0% { width: 0%; background: #00d4ff; }
+    80% { width: 100%; background: #00d4ff; }
+    85% { width: 100%; background: #fff; box-shadow: 0 0 25px #fff; }
+    100% { width: 100%; opacity: 0; }
+}
+
+@keyframes giro-motor {
+    0%, 100% { transform: rotate(0deg) scale(1.1); }
+    50% { transform: rotate(360deg) scale(1.1); }
+}
+
+@keyframes parpadeo-texto {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* MÓVIL */
+@media (max-width: 600px) {
+    .logo-central { width: 110px; }
+    .letra { font-size: 2.5rem; }
+    .letra-a { --destino: translateX(-140px) !important; }
+    .letra-x { --destino: translateX(-100px) !important; }
+    .letra-t { --destino: translateX(-60px) !important; }
+    .letra-l { --destino: translateX(60px) !important; }
+    .letra-i { --destino: translateX(100px) !important; }
+    .letra-x2 { --destino: translateX(140px) !important; }
+    .barra-fondo { width: 150px; }
+}     
+
+/* ==========================================
+   ✨ AXTELIX PREMIUM DESIGN SYSTEM - V3.0 (ULTRA LIFE)
+   ========================================== */
+:root {
+    --gold-axtelix: #d4af37;
+    --gold-bright: #f1c40f;
+    --dark-bg: #020617;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --accent-blue: #1e293b;
+    --mp-blue: #009ee3;
+    --paypal-blue: #003087;
+}
+
+/* --- FONDO PRINCIPAL CON RADIAL GLOW --- */
+#capa-checkout {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    /* Fondo un poco más oscuro para que resalte la caja */
+    background: radial-gradient(circle at center, rgba(30, 41, 59, 0.95) 0%, rgba(2, 6, 23, 0.98) 100%);
+    z-index: 9999999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, sans-serif;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    animation: fadeInAxt 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* --- CONTENEDOR DE CRISTAL (MODAL) --- */
+.modal-container-axt {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(212, 175, 55, 0.2); /* Borde con ligero toque dorado */
+    width: 100%;
+    max-width: 480px;
+    border-radius: 40px;
+    padding: 35px;
+    position: relative;
+    color: white;
+    text-align: center;
+    box-shadow: 0 50px 100px rgba(0,0,0,0.9), 0 0 40px rgba(212, 175, 55, 0.1) inset; /* Glow interior */
+    max-height: 95vh;
+    overflow-y: auto;
+    transition: all 0.4s ease;
+}
+
+/* --- BOTÓN CERRAR PREMIUM --- */
+.axt-close-btn {
+    position: absolute;
+    top: 25px; right: 25px;
+    border: 1px solid var(--glass-border) !important;
+    background: rgba(255,255,255,0.05) !important;
+    font-size: 24px !important;
+    cursor: pointer;
+    color: #94a3b8 !important;
+    width: 45px; height: 45px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+}
+
+.axt-close-btn:hover {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #ef4444 !important;
+    border-color: rgba(239, 68, 68, 0.5) !important;
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+/* --- INPUTS ESTILO FUTURISTA --- */
+.input-axt {
+    width: 100%;
+    padding: 18px;
+    margin-bottom: 12px;
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: rgba(255,255,255,0.03);
+    color: white;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-axt:focus {
+    border-color: var(--gold-axtelix);
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+    transform: translateY(-2px);
+}
+
+/* --- TARJETA LUXURY (DINÁMICA & VIVA) --- */
+.card-axtelix {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto 25px auto;
+    perspective: 1000px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.card-axtelix:hover {
+    transform: translateY(-5px);
+}
+
+.card-front {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #020617 100%);
+    height: 210px;
+    border-radius: 28px;
+    padding: 28px;
+    position: relative;
+    color: white;
+    text-align: left;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.05) inset;
+    border: 1px solid rgba(255,255,255,0.15);
+    overflow: hidden;
+    animation: floatingCard 4s ease-in-out infinite;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-mercado {
+    background: linear-gradient(135deg, #009ee3 0%, #0c1a52 100%) !important;
+    box-shadow: 0 20px 50px rgba(0, 158, 227, 0.3) !important;
+}
+
+.card-front::after {
+    content: '';
+    position: absolute;
+    top: -150%; left: -150%;
+    width: 300%; height: 300%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
+    transform: rotate(45deg);
+    animation: lightSweep 4s infinite ease-in-out;
+}
+
+.card-bank-name { font-weight: 800; font-size: 12px; color: var(--gold-axtelix); letter-spacing: 2.5px; text-transform: uppercase; }
+.card-chip-gold {
+    width: 52px; height: 38px;
+    background: linear-gradient(135deg, #d4af37 0%, #f1c40f 100%);
+    border-radius: 9px;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+.card-number-display { font-family: 'Courier New', monospace; font-size: 21px; font-weight: bold; letter-spacing: 3px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.holder-label { font-size: 9px; opacity: 0.6; letter-spacing: 1px; }
+.holder-name { font-size: 15px; font-weight: 600; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.card-type-label { font-weight: 900; font-style: italic; font-size: 18px; opacity: 0.9; }
+
+/* --- BOTONES CON GLOW SÚPER VIVO --- */
+.btn-primary-axt {
+    background: linear-gradient(135deg, var(--gold-axtelix) 0%, var(--gold-bright) 100%) !important;
+    color: #000 !important;
+    width: 100%;
+    padding: 22px;
+    border: none !important;
+    border-radius: 20px;
+    font-weight: 900;
+    font-size: 17px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-primary-axt:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 45px rgba(212, 175, 55, 0.7);
+}
+
+/* FIX PAYPAL: Perfecto, centrado, sin estirarse raro */
+.btn-paypal-axt {
+    background: #ffc439 !important;
+    color: #003087 !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 50px !important; 
+    height: 55px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900 !important;
+    box-shadow: 0 10px 30px rgba(255, 196, 57, 0.4) !important;
+    text-decoration: none !important;
+}
+
+/* FIX WHATSAPP: Animación de pulso para invitar al click */
+.btn-whatsapp-axt {
+    background: linear-gradient(135deg, #25d366 0%, #128C7E 100%) !important;
+    color: white !important;
+    width: 100%;
+    padding: 20px;
+    border: none !important;
+    border-radius: 22px;
+    font-weight: 900;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+    transition: all 0.3s ease;
+    animation: pulseWs 2s infinite;
+}
+
+.btn-whatsapp-axt:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(37, 211, 102, 0.6);
+    animation: none; /* Se detiene al pasar el mouse */
+}
+
+/* --- RESUMEN FINAL BOX --- */
+.resumen-final-box {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px dashed rgba(212, 175, 55, 0.4);
+    border-radius: 24px;
+    padding: 22px;
+    text-align: left;
+    margin: 25px 0;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* --- ACORDEÓN DE AYUDA (100% ARREGLADO) --- */
+.ayuda-pago-container {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Forzamos estilos para que tu página no lo vuelva blanco y feo */
+.btn-ayuda-link {
+    background: rgba(212, 175, 55, 0.05) !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    color: var(--gold-axtelix) !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    padding: 12px 24px !important;
+    border-radius: 50px !important;
+    cursor: pointer;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-ayuda-link:hover {
+    background: rgba(212, 175, 55, 0.15) !important;
+    border-color: var(--gold-axtelix) !important;
+    box-shadow: 0 0 15px rgba(212,175,55,0.3);
+    transform: translateY(-2px);
+}
+
+/* Oculto estrictamente hasta que le des click */
+.ayuda-guia-content {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0, 1, 0, 1);
+    margin-top: 0;
+}
+
+.ayuda-guia-content.show {
+    max-height: 500px;
+    opacity: 1;
+    margin-top: 20px;
+    transition: all 0.5s cubic-bezier(1, 0, 1, 0);
+}
+
+.paso-pago {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+    padding: 16px;
+    border-radius: 18px;
+    border-left: 3px solid var(--gold-axtelix); /* Detalle premium */
+}
+
+.paso-pago p { margin: 0; font-size: 13px; color: #e2e8f0; line-height: 1.5; text-align: left; }
+
+/* --- ANIMACIONES GLOBALES --- */
+@keyframes fadeInAxt { 
+    from { opacity: 0; transform: translateY(30px) scale(0.95); } 
+    to { opacity: 1; transform: translateY(0) scale(1); } 
+}
+
+@keyframes lightSweep {
+    0% { transform: translate(-20%, -20%) rotate(45deg); }
+    30%, 100% { transform: translate(120%, 120%) rotate(45deg); }
+}
+
+@keyframes floatingCard {
+    0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+    50% { transform: translateY(-12px) rotateX(4deg) rotateY(2deg); box-shadow: 0 30px 60px rgba(0,0,0,0.9); }
+}
+
+@keyframes pulseWs {
+    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+    70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+/* --- SCROLLBAR CUSTOM (Elegante) --- */
+.modal-container-axt::-webkit-scrollbar { width: 6px; }
+.modal-container-axt::-webkit-scrollbar-track { background: transparent; }
+.modal-container-axt::-webkit-scrollbar-thumb { 
+    background: rgba(212, 175, 55, 0.5); 
+    border-radius: 10px; 
+}
+.modal-container-axt::-webkit-scrollbar-thumb:hover { background: var(--gold-axtelix); }
+
+/* --- TOTAL BOX --- */
+.total-box-axt {
+    background: rgba(255,255,255,0.02);
+    border-radius: 25px;
+    padding: 20px;
+    margin: 25px 0;
+    border: 1px solid var(--glass-border);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* ==========================================================================
+   💎 AXTELIX HYPER-CSS V5 | SUPABASE EDITION
+   ========================================================================== */
+
+/* --- VARIABLES GLOBALES --- */
+:root {
+    --gold-primary:      #d4af37;
+    --gold-light:        #f3e5ab;
+    --gold-glow-strong:  rgba(212, 175, 55, 0.4);
+    --gold-glow-soft:    rgba(212, 175, 55, 0.08);
+
+    --bg-void:           #030303;
+    --bg-deep:           #0a0a0a;
+
+    --glass-heavy:       rgba(10, 10, 10, 0.85);
+    --glass-medium:      rgba(20, 20, 20, 0.6);
+    --glass-light:       rgba(255, 255, 255, 0.03);
+
+    --border-gold:       rgba(212, 175, 55, 0.25);
+    --border-glass:      rgba(255, 255, 255, 0.05);
+
+    --card-width:        320px;
+    --card-height:       480px;
+    --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- RESET --- */
+*, *::before, *::after {
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+html {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+body {
+    background-color: var(--bg-void);
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+    max-width: 100%;
+    min-height: 100vh;
+}
+
+/* Scrollbar global */
+::-webkit-scrollbar          { width: 8px; height: 8px; }
+::-webkit-scrollbar-track    { background: var(--bg-void); }
+::-webkit-scrollbar-thumb    { background: var(--border-gold); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-primary); }
+
+/* ==========================================================================
+   FONDO ATMOSFÉRICO
+   ========================================================================== */
+.axt-universe {
+    position: fixed; inset: 0; z-index: -10;
+    background: radial-gradient(circle at 50% 50%, var(--bg-deep) 0%, var(--bg-void) 100%);
+    overflow: hidden;
+    max-width: 100vw;
+}
+.glow-orb { position: absolute; border-radius: 50%; filter: blur(120px); z-index: -9; }
+.orb-gold-1 { width:60vw; height:60vw; top:-20%; left:-10%;  background: var(--gold-glow-soft);          animation: drift 25s infinite alternate ease-in-out; }
+.orb-gold-2 { width:50vw; height:50vw; bottom:-10%; right:-10%; background: rgba(212,175,55,0.05);       animation: drift-reverse 30s infinite alternate ease-in-out; }
+.orb-gold-3 { width:30vw; height:30vw; top:30%; left:40%;   background: rgba(212,175,55,0.03);           animation: pulse-glow 15s infinite alternate ease-in-out; }
+.axt-noise-layer {
+    position: absolute; inset: 0; z-index: -8;
+    background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E');
+    opacity: 0.03; pointer-events: none;
+}
+
+/* ==========================================================================
+   GLASS UTILITY
+   ========================================================================== */
+.glass-v3 {
+    background: var(--glass-heavy);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--border-gold);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05);
+    border-radius: 24px;
+}
+
+/* ==========================================================================
+   HERO HEADER
+   ========================================================================== */
+.axt-hero-header {
+    position: relative;
+    padding: 60px 20px 40px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; z-index: 10;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Corona */
+.axt-crown-anchor { position: relative; margin-bottom: 16px; z-index: 20; }
+.crown-main-icon  { font-size: 45px; color: var(--gold-primary); filter: drop-shadow(0 0 15px var(--gold-glow-strong)); }
+.crown-aura {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 80px; height: 80px;
+    background: radial-gradient(circle, var(--gold-glow-strong) 0%, transparent 70%);
+    border-radius: 50%; z-index: -1; animation: pulse-glow 3s infinite alternate;
+}
+
+/* Brand */
+.axt-brand-group  { margin-bottom: 30px; width: 100%; }
+.axt-main-title   { font-family: 'Syncopate', sans-serif; font-size: 3rem; font-weight: 700; letter-spacing: 8px; text-transform: uppercase; margin-bottom: 5px; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.axt-main-title span { color: var(--gold-primary); -webkit-text-stroke: 1px var(--gold-primary); text-shadow: 0 0 20px var(--gold-glow-strong); }
+.axt-tagline      { font-family: 'Inter', sans-serif; font-size: 0.85rem; letter-spacing: 5px; color: #888; }
+
+/* Stats container */
+.axt-stats-container { display: flex; align-items: center; justify-content: center; gap: 40px; padding: 25px 50px; margin-bottom: 40px; width: 100%; max-width: 600px; }
+.stat-main-score h2  { font-size: 3.5rem; font-family: 'Inter', sans-serif; font-weight: 900; background: linear-gradient(180deg,#fff 0%,#aaa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+.stars-flex          { color: var(--gold-primary); font-size: 14px; margin: 8px 0; display: flex; gap: 3px; justify-content: center; }
+.stat-main-score label { font-size: 0.7rem; letter-spacing: 2px; color: #666; }
+.stat-divider-v      { width: 1px; height: 80px; background: linear-gradient(to bottom, transparent, var(--border-gold), transparent); flex-shrink: 0; }
+.stat-progress-group { display: flex; flex-direction: column; gap: 8px; width: 200px; min-width: 0; }
+
+/* Skeleton bars */
+.skeleton-bar { height: 6px; width: 100%; background: var(--glass-light); border-radius: 10px; overflow: hidden; position: relative; }
+.skeleton-bar::after { content: ''; position: absolute; top:0; left:-100%; width:50%; height:100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation: shimmer 2s infinite; }
+
+/* Botón principal */
+.axt-btn-v5 {
+    position: relative; background: var(--gold-primary); color: #000; border: none;
+    padding: 18px 40px; border-radius: 50px; font-family: 'Inter', sans-serif;
+    font-weight: 900; font-size: 14px; letter-spacing: 1.5px; cursor: pointer;
+    transition: var(--transition-smooth);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 -3px 0 rgba(0,0,0,0.2);
+    max-width: 100%;
+    white-space: nowrap;
+}
+.axt-btn-v5:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px var(--gold-glow-strong), inset 0 -3px 0 rgba(0,0,0,0.2); }
+
+/* ==========================================================================
+   NAVEGACIÓN DOCK
+   ========================================================================== */
+.axt-navigation-dock { display: flex; justify-content: center; margin-bottom: 20px; z-index: 10; position: relative; width: 100%; padding: 0 16px; }
+.dock-inner          { display: flex; align-items: center; background: var(--glass-medium); border: 1px solid var(--border-glass); border-radius: 100px; padding: 8px; backdrop-filter: blur(20px); max-width: 100%; }
+.nav-item            { background: transparent; border: 1px solid transparent; color: #888; padding: 12px 25px; border-radius: 100px; cursor: pointer; font-weight: 700; font-size: 12px; letter-spacing: 1px; transition: var(--transition-smooth); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.nav-item:hover      { color: #fff; }
+.nav-item.active     { background: var(--glass-light); border-color: var(--gold-primary); color: var(--gold-primary); box-shadow: inset 0 0 20px var(--gold-glow-soft); }
+.dock-separator      { width: 1px; height: 20px; background: var(--border-glass); margin: 0 5px; flex-shrink: 0; }
+
+/* ==========================================================================
+   THEATER & CARDS
+   ========================================================================== */
+.axt-theater-section  { position: relative; padding: 40px 0 100px; width: 100%; overflow: hidden; }
+.axt-slider-viewport  { overflow-x: auto; overflow-y: visible; scroll-behavior: smooth; padding: 40px 10vw; perspective: 2500px; /* Prevent the scroll area itself from causing page-level overflow */ }
+.axt-slider-viewport::-webkit-scrollbar { display: none; }
+.axt-master-track     { display: flex; gap: 40px; width: max-content; padding-bottom: 50px; }
+
+/* Card 3D */
+.axt-card { width: var(--card-width); height: var(--card-height); perspective: 1500px; animation: float-card 6s infinite ease-in-out; flex-shrink: 0; }
+.axt-card:nth-child(even) { animation-delay: -3s; animation-duration: 7s; }
+.axt-card:nth-child(3n)   { animation-delay: -1.5s; animation-duration: 5.5s; }
+.axt-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.175,0.885,0.32,1.275); transform-style: preserve-3d; cursor: pointer; }
+.axt-card.is-flipped .axt-card-inner { transform: rotateY(180deg); }
+.axt-card-front, .axt-card-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: rgba(12,12,12,0.85); border: 1px solid var(--border-gold); border-radius: 30px; padding: 30px; display: flex; flex-direction: column; box-shadow: 0 30px 60px rgba(0,0,0,0.6); backdrop-filter: blur(20px); overflow: hidden; }
+.axt-card-back { transform: rotateY(180deg); align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #111 0%, #050505 100%); }
+
+/* Imagen dentro de card */
+.axt-image-container { width: 100%; height: 160px; border-radius: 15px; overflow: hidden; margin-top: 20px; border: 1px solid var(--border-glass); }
+.axt-image-container img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition-smooth); }
+.axt-card:hover .axt-image-container img { transform: scale(1.05); }
+
+/* Reacciones */
+.axt-reaction-bar { display: flex; gap: 10px; z-index: 10; }
+.axt-reaction-bar button { background: var(--glass-light); border: 1px solid var(--border-glass); color: #aaa; padding: 6px 14px; border-radius: 12px; font-size: 12px; cursor: pointer; transition: 0.3s; backdrop-filter: blur(5px); }
+.axt-reaction-bar button:hover { border-color: var(--gold-primary); color: #fff; }
+.axt-reaction-bar button.voted { background: var(--gold-primary); color: #000; border-color: var(--gold-primary); }
+
+/* Flechas del slider */
+.control-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 60px; height: 60px; background: var(--glass-medium); border: 1px solid var(--border-gold); color: var(--gold-primary); border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 50; backdrop-filter: blur(10px); transition: var(--transition-smooth); }
+.control-arrow:hover { background: var(--gold-primary); color: #000; box-shadow: 0 0 20px var(--gold-glow-strong); }
+.c-left  { left: 3vw; }
+.c-right { right: 3vw; }
+
+/* ==========================================================================
+   FOOTER — DISEÑO LIBRE
+   ========================================================================== */
+.axt-footer {
+    position: relative; overflow: hidden;
+    background: #000;
+    border-top: 1px solid rgba(212,175,55,0.2);
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Fondo con mesh diagonal dorado */
+.footer-bg-mesh {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212,175,55,0.12) 0%, transparent 70%),
+        repeating-linear-gradient(45deg,  transparent, transparent 60px, rgba(212,175,55,0.03) 60px, rgba(212,175,55,0.03) 61px),
+        repeating-linear-gradient(-45deg, transparent, transparent 60px, rgba(212,175,55,0.02) 60px, rgba(212,175,55,0.02) 61px);
+}
+.footer-scanlines {
+    position: absolute; inset: 0; z-index: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px);
+    pointer-events: none;
+}
+
+.footer-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 70px 40px 0; width: 100%; }
+
+/* Logo central con corona orbital */
+.footer-logo-block { display: flex; flex-direction: column; align-items: center; margin-bottom: 50px; }
+.footer-crown-orbit { position: relative; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+.footer-crown-icon  { font-size: 38px; color: var(--gold-primary); filter: drop-shadow(0 0 18px var(--gold-glow-strong)); animation: pulse-glow 4s infinite alternate; z-index: 2; }
+
+/* Anillos orbitales */
+.orbit-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(212,175,55,0.2); animation: spin-slow linear infinite; }
+.orbit-ring.r1 { width: 70px; height: 70px; animation-duration: 12s; }
+.orbit-ring.r2 { width: 90px; height: 90px; animation-duration: 20s; animation-direction: reverse; border-style: dashed; border-color: rgba(212,175,55,0.1); }
+
+/* Puntos orbitales */
+.orbit-dot { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: var(--gold-primary); box-shadow: 0 0 6px var(--gold-glow-strong); animation: orbit-path linear infinite; }
+.orbit-dot.d1 { animation-duration: 8s; }
+.orbit-dot.d2 { animation-duration: 12s; animation-delay: -4s; }
+.orbit-dot.d3 { animation-duration: 16s; animation-delay: -8s; }
+
+/* Wordmark */
+.footer-wordmark { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; justify-content: center; }
+.fw-main  { font-family: 'Syncopate', sans-serif; font-size: 2.4rem; font-weight: 700; letter-spacing: 10px; color: #fff; text-shadow: 0 0 30px rgba(255,255,255,0.1); }
+.fw-badge { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 0.75rem; letter-spacing: 4px; color: #000; background: var(--gold-primary); padding: 4px 10px; border-radius: 4px; margin-bottom: 6px; }
+.footer-tagline-small { font-size: 0.7rem; letter-spacing: 4px; color: #444; text-transform: uppercase; }
+
+/* Regla divisora */
+.footer-rule { display: flex; align-items: center; gap: 20px; margin-bottom: 50px; }
+.fr-line { flex-grow: 1; height: 1px; background: linear-gradient(to right, transparent, rgba(212,175,55,0.3), transparent); min-width: 0; }
+.fr-gem  { color: var(--gold-primary); font-size: 10px; opacity: 0.7; flex-shrink: 0; }
+
+/* Grid de columnas */
+.footer-grid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 40px; margin-bottom: 50px; }
+.fg-col--center { text-align: center; }
+.fg-col--right  { text-align: right; }
+.fg-title { font-family: 'Syncopate', sans-serif; font-size: 11px; letter-spacing: 3px; color: var(--gold-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.fg-col--center .fg-title { justify-content: center; }
+.fg-col--right  .fg-title { justify-content: flex-end; }
+.fg-list { list-style: none; }
+.fg-list li { font-size: 12px; color: #555; padding: 6px 0; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.03); transition: color 0.3s; }
+.fg-list li:hover { color: var(--gold-primary); }
+
+/* Socials */
+.fg-socials { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+.fgs-item   { display: flex; align-items: center; gap: 10px; color: #555; text-decoration: none; font-size: 12px; letter-spacing: 1px; padding: 8px 16px; border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; width: 160px; transition: all 0.3s; background: rgba(255,255,255,0.02); }
+.fgs-item i { color: var(--gold-primary); font-size: 14px; width: 16px; text-align: center; }
+.fgs-item:hover { color: #fff; border-color: rgba(212,175,55,0.3); background: rgba(212,175,55,0.05); transform: translateX(4px); }
+
+/* Ticker copyright */
+.footer-bottom-bar { border-top: 1px solid rgba(212,175,55,0.1); overflow: hidden; padding: 14px 0; margin: 0 -40px; }
+.fbb-ticker { display: flex; gap: 30px; white-space: nowrap; animation: ticker-scroll 20s linear infinite; font-size: 10px; letter-spacing: 3px; color: #333; font-family: 'Syncopate', sans-serif; }
+.fbb-sep { color: var(--gold-primary); opacity: 0.5; }
+
+/* ==========================================================================
+   MODAL
+   ========================================================================== */
+.axt-modal-system {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 9999;
+    /* Fix: prevent the modal overlay from causing overflow */
+    width: 100%; height: 100%;
+    overflow-y: auto;
+    padding: 20px;
+    /* Fix for iOS: prevent body scroll bleed */
+    -webkit-overflow-scrolling: touch;
+}
+.axt-modal-frame  {
+    width: 90%; max-width: 500px;
+    max-height: 90vh;
+    display: flex; flex-direction: column;
+    border: 1px solid var(--gold-primary);
+    box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px var(--gold-glow-soft);
+    /* Fix: ensure frame doesn't overflow on mobile */
+    position: relative;
+    margin: auto;
+}
+
+.modal-top-bar { padding: 25px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); flex-shrink: 0; }
+.m-title-group { display: flex; align-items: center; gap: 10px; }
+.m-title-group h3 { font-family: 'Syncopate', sans-serif; font-size: 14px; letter-spacing: 2px; }
+.gold-txt { color: var(--gold-primary); }
+
+/* Botón cerrar */
+.axt-close-trigger { width: 30px; height: 30px; background: transparent; border: none; position: relative; cursor: pointer; flex-shrink: 0; }
+.cross-line { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: var(--gold-primary); transition: 0.3s; }
+.cross-line:nth-child(1) { transform: translateY(-50%) rotate(45deg); }
+.cross-line:nth-child(2) { transform: translateY(-50%) rotate(-45deg); }
+.axt-close-trigger:hover .cross-line { background: #fff; transform: translateY(-50%) rotate(135deg); }
+
+.modal-content-scroll { padding: 30px; overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; }
+.axt-input-section { margin-bottom: 22px; }
+
+/* Label con badge */
+.axt-field-label { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #888; letter-spacing: 1.5px; margin-bottom: 10px; flex-wrap: wrap; }
+.field-badge { background: rgba(212,175,55,0.15); border: 1px solid rgba(212,175,55,0.3); color: var(--gold-primary); padding: 2px 8px; border-radius: 20px; font-size: 9px; letter-spacing: 1px; font-weight: 700; }
+
+/* Inputs */
+.axt-input-wrapper { display: flex; align-items: center; background: var(--glass-light); border: 1px solid var(--border-glass); border-radius: 12px; padding: 15px; transition: 0.3s; }
+.axt-input-wrapper:focus-within { border-color: var(--gold-primary); box-shadow: 0 0 15px var(--gold-glow-soft); background: rgba(255,255,255,0.05); }
+.axt-input-wrapper i { color: #666; margin-right: 12px; flex-shrink: 0; }
+.axt-input-field  { background: transparent; border: none; color: #fff; width: 100%; font-size: 14px; font-family: 'Inter', sans-serif; min-width: 0; }
+.axt-input-field::placeholder { color: #555; }
+.area-wrap { align-items: flex-start; }
+textarea.axt-input-field { resize: none; line-height: 1.5; }
+
+/* Contadores */
+.mini-counter-row { font-size: 10px; color: #555; text-align: right; margin-top: 5px; letter-spacing: 1px; }
+.word-limit-bar   { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.progress-bar-track { flex-grow: 1; height: 4px; background: var(--glass-light); border-radius: 10px; overflow: hidden; min-width: 0; }
+.progress-bar-fill  { height: 100%; width: 0%; background: var(--gold-primary); border-radius: 10px; transition: width 0.3s, background 0.3s; }
+.count-txt { font-size: 10px; color: #666; white-space: nowrap; flex-shrink: 0; }
+
+/* Stars */
+.star-rating-v5 { display: flex; gap: 10px; font-size: 24px; margin: 8px 0; }
+.star-feedback  { font-size: 11px; color: #888; letter-spacing: 1px; margin-top: 6px; }
+
+/* Upload */
+.axt-upload-box { border: 2px dashed var(--border-glass); border-radius: 15px; padding: 30px 20px; text-align: center; cursor: pointer; background: rgba(255,255,255,0.02); transition: var(--transition-smooth); }
+.axt-upload-box:hover { border-color: var(--gold-primary); background: var(--gold-glow-soft); }
+.upload-icon-circle { width: 50px; height: 50px; border-radius: 50%; background: var(--glass-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 20px; color: var(--gold-primary); }
+.axt-upload-box p    { font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+.axt-upload-box span { font-size: 10px; color: #666; }
+
+/* Submit */
+.modal-footer-action { margin-top: 30px; text-align: center; flex-shrink: 0; }
+.axt-btn-submit { width: 100%; background: linear-gradient(90deg, #d4af37 0%, #f3e5ab 50%, #d4af37 100%); background-size: 200% auto; color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: 900; font-size: 14px; cursor: pointer; transition: 0.5s; letter-spacing: 1px; }
+.axt-btn-submit:hover { background-position: right center; box-shadow: 0 0 20px var(--gold-glow-strong); }
+
+/* ==========================================================================
+   NOTIFICACIÓN TOAST
+   ========================================================================== */
+.axt-notification { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--glass-heavy); border: 1px solid var(--border-gold); color: var(--gold-primary); padding: 15px 30px; border-radius: 50px; font-size: 13px; font-weight: 700; backdrop-filter: blur(20px); z-index: 10000; transition: bottom 0.5s cubic-bezier(0.175,0.885,0.32,1.275); box-shadow: 0 10px 30px rgba(0,0,0,0.5); white-space: nowrap; max-width: calc(100vw - 40px); }
+.axt-notification.show { bottom: 40px; }
+
+/* ==========================================================================
+   KEYFRAMES
+   ========================================================================== */
+@keyframes float-card {
+    0%,100% { transform: translateY(0) rotateX(0deg); }
+    50%      { transform: translateY(-15px) rotateX(2deg); box-shadow: 0 40px 70px rgba(0,0,0,0.8); }
+}
+@keyframes drift         { 0% { transform: translate(0,0) scale(1); }   100% { transform: translate(8vw,5vh) scale(1.1); } }
+@keyframes drift-reverse { 0% { transform: translate(0,0) scale(1); }   100% { transform: translate(-8vw,-5vh) scale(1.1); } }
+@keyframes pulse-glow    { 0% { opacity: 0.6; transform: scale(0.9); } 100% { opacity: 1;   transform: scale(1.1); } }
+@keyframes shimmer       { 100% { left: 100%; } }
+@keyframes spin-slow     { to { transform: rotate(360deg); } }
+@keyframes orbit-path {
+    0%   { transform: rotate(0deg)   translateX(45px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(45px) rotate(-360deg); }
+}
+@keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 768px) {
+    :root { --card-width: 260px; --card-height: 420px; }
+
+    .axt-main-title    { font-size: 1.7rem; letter-spacing: 4px; }
+    .axt-tagline       { font-size: 0.7rem; letter-spacing: 3px; }
+
+    /* Stats box: stack vertically, cap width */
+    .axt-stats-container {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        width: 90%;
+        max-width: 90%;
+    }
+    .stat-divider-v    { width: 80%; height: 1px; background: linear-gradient(to right, transparent, var(--border-gold), transparent); }
+    .stat-progress-group { width: 100%; }
+
+    /* Slider: tighter side padding so first card appears partially and invites scroll */
+    .axt-slider-viewport { padding: 20px 16px; }
+    .axt-master-track    { gap: 20px; }
+
+    /* Hide PC arrows */
+    .hide-mobile       { display: none !important; }
+
+    /* Nav dock: smaller text/padding */
+    .nav-item { padding: 10px 14px; font-size: 11px; gap: 6px; }
+
+    /* Modal: full-width on mobile, anchored at bottom to avoid keyboard issues */
+    .axt-modal-system  {
+        align-items: flex-end;
+        padding: 0;
+    }
+    .axt-modal-frame   {
+        width: 100%;
+        max-width: 100%;
+        max-height: 92vh;
+        border-radius: 24px 24px 0 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
+    .modal-top-bar     { padding: 20px; }
+    .modal-content-scroll { padding: 20px; }
+
+    /* Footer */
+    .footer-grid       { grid-template-columns: 1fr; gap: 30px; }
+    .fg-col--center, .fg-col--right { text-align: left; }
+    .fg-col--center .fg-title, .fg-col--right .fg-title { justify-content: flex-start; }
+    .fg-socials        { align-items: flex-start; }
+    .fw-main           { font-size: 1.6rem; letter-spacing: 6px; }
+    .footer-inner      { padding: 50px 20px 0; }
+    .footer-bottom-bar { margin: 0 -20px; }
+
+    /* Toast: prevent overflow */
+    .axt-notification  { font-size: 11px; padding: 12px 20px; white-space: normal; text-align: center; max-width: calc(100vw - 32px); }
+}
+
+/* Extra small screens */
+@media (max-width: 400px) {
+    :root { --card-width: 240px; --card-height: 400px; }
+    .axt-main-title { font-size: 1.4rem; letter-spacing: 3px; }
+    .nav-item span  { display: none; }
+    .nav-item       { padding: 10px 18px; }
+}
+
+/* Scrollbar modal */
+.custom-scroll::-webkit-scrollbar       { width: 4px; }
+.custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+.custom-scroll::-webkit-scrollbar-thumb { background: var(--border-gold); border-radius: 10px; }
+/* ==========================================================================
+   💎 AXTELIX MÓVIL "EMERALD-GOLD: TECH-LUXURY" — THE FINAL UNIFICATION
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* 1. Viewport: Estabilidad total */
+    .axt-slider-viewport {
+        perspective: none !important;
+        -webkit-overflow-scrolling: touch !important;
+        scroll-snap-type: x mandatory; /* Scroll magnético */
+    }
+
+    /* 2. Base de la Tarjeta (Flotado "Jelly Float") */
+    .axt-card {
+        animation: axtJellyFloat 6s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55) !important;
+        transform: translateZ(0); /* Aceleración de hardware segura */
+        margin-top: 15px;
+    }
+    .axt-card:nth-child(even) { animation-delay: -3s; }
+
+    /* 3. FRENTE: "Obsidiana & Emerald Tech" + UNIFIED FLASH */
+    .axt-card-front {
+        background: #000 !important; /* Fondo negro profundo */
+        border: none !important;
+        overflow: hidden;
+        border-radius: 20px;
+        /* El contorno neón verde esmeralda pulsante (Tech-Luxury) */
+        box-shadow: inset 0 0 12px #00e676, 0 0 25px rgba(0, 230, 118, 0.4) !important;
+        animation: axtEmeraldGlowPulse 5s infinite alternate ease-in-out;
+    }
+
+    /* Ajuste de contenido frontal (Estilo Nítido Blanco Suave) */
+    .axt-card-front h4 {
+        color: #f3f4f6 !important;
+        font-weight: 700 !important;
+    }
+    .axt-card-front .axt-stars i { color: #f3f4f6 !important; }
+    .axt-card-front p { color: rgba(243, 244, 246, 0.9) !important; }
+
+    /* UNIFIED FLASH FRENTE (::before) — ¡ORO LÍQUIDO LENTO Y NITIDO! */
+    .axt-card-front::before {
+        content: "";
+        position: absolute;
+        top: 0; left: -150%;
+        width: 60%; height: 100%;
+        /* Gradiente de luz de ORO LÍQUIDO ultra-nítido */
+        background: linear-gradient(
+            to right,
+            transparent,
+            rgba(212, 175, 55, 0.6) 30%, /* Oro Suave */
+            rgba(255, 255, 255, 0.9) 50%, /* Brillo máximo blanco nítido (¡Se nota más!) */
+            rgba(212, 175, 55, 0.6) 70%,
+            transparent
+        );
+        transform: skewX(-25deg);
+        /* Velocidad refinada: 10 segundos (Súper lento y elegante) */
+        animation: axtSlowGoldFlash 10s infinite cubic-bezier(0.3, 1, 0.7, 1);
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    /* 4. ATRÁS: "Obsidiana Luxury" + UNIFIED FLASH + EMERALD CROWN */
+    .axt-card-back { 
+        display: none !important; 
+        background: #000 !important; /* Fondo negro profundo */
+        border: 2px solid #00e676 !important; /* Borde nítido verde esmeralda */
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: inset 0 0 30px rgba(0, 230, 118, 0.1), 0 0 15px rgba(0, 230, 118, 0.2) !important;
+    }
+
+    /* UNIFIED FLASH REVERSO (::before) — ¡El mismo ORO LÍQUIDO LENTO! */
+    .axt-card-back::before {
+        content: "";
+        position: absolute;
+        top: 0; left: -150%;
+        width: 60%; height: 100%;
+        /* El mismo gradiente ultra-nítido de ORO LÍQUIDO */
+        background: linear-gradient(
+            to right,
+            transparent,
+            rgba(212, 175, 55, 0.6) 30%,
+            rgba(255, 255, 255, 0.9) 50%, /* Brillo máximo blanco nítido (¡Se nota más!) */
+            rgba(212, 175, 55, 0.6) 70%,
+            transparent
+        );
+        transform: skewX(-25deg);
+        /* La misma animación de 10 segundos */
+        animation: axtSlowGoldFlash 10s infinite cubic-bezier(0.3, 1, 0.7, 1);
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    /* Ajuste de contenido trasero (Estilo Nítido Blanco Suave) */
+    .is-flipped .axt-card-back * { 
+        color: #f3f4f6 !important; 
+        font-weight: 700 !important;
+    }
+    
+    /* La Corona Trasera es VERDE ESMERALDA (Tech-Luxury) */
+    .is-flipped .axt-card-back i.fa-crown { 
+        color: #00e676 !important; 
+        animation: axtCrownPulse 2s infinite alternate ease-in-out; 
+    }
+
+    /* 5. INTERCAMBIO POP-BOUNCE */
+    .axt-card.is-flipped .axt-card-front { display: none !important; }
+    .axt-card.is-flipped .axt-card-back { 
+        display: flex !important; 
+        opacity: 1 !important;
+        /* Efecto de aparición elástica */
+        animation: axtPopBounce 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+
+    /* --- KEYFRAMES REFINADOS, LENTOS & BRILLANTES --- */
+
+    /* Pulso del Neón Verde Esmeralda Frontal */
+    @keyframes axtEmeraldGlowPulse { 0% { box-shadow: inset 0 0 10px #00e676, 0 0 20px rgba(0, 230, 118, 0.4); } 100% { box-shadow: inset 0 0 15px #00e676, 0 0 30px rgba(0, 230, 118, 0.6); } }
+
+    /* El barrido de ORO LÍQUIDO ultra-lento y nítido (10s) */
+    @keyframes axtSlowGoldFlash {
+        0% { left: -150%; opacity: 0; }
+        15% { opacity: 0.1; }
+        25% { opacity: 0.9; } /* Brillo máximo nítido cruzando el centro */
+        35% { opacity: 0.1; }
+        50%, 100% { left: 200%; opacity: 0; }
+    }
+
+    /* Tu Jelly Float favorito */
+    @keyframes axtJellyFloat { 0%, 100% { transform: translateY(0) rotate(0deg) scale(1); } 33% { transform: translateY(-15px) rotate(2deg) scale(1.02); } 66% { transform: translateY(-5px) rotate(-2deg) scale(0.98); } }
+    
+    /* Pop Bounce */
+    @keyframes axtPopBounce { 0% { transform: scale(0.5) rotate(-10deg); opacity: 0; } 60% { transform: scale(1.1) rotate(5deg); opacity: 1; } 100% { transform: scale(1) rotate(0deg); } }
+    
+    /* Pulso de la corona esmeralda */
+    @keyframes axtCrownPulse { 0% { transform: scale(1); filter: drop-shadow(0 0 10px #00e676); } 100% { transform: scale(1.15); filter: drop-shadow(0 0 25px #00e676); } }
+}
+    </style>
+</head>
+<body>
+
+    <div id="loader-axtelix">
+    <div class="fondo-espacial">
+        <div class="meteorito" style="--angulo: 20deg; --duracion: 1.2s; --retraso: 0s;"></div>
+        <div class="meteorito" style="--angulo: 110deg; --duracion: 1.5s; --retraso: 0.3s;"></div>
+        <div class="meteorito" style="--angulo: 210deg; --duracion: 1.1s; --retraso: 0.6s;"></div>
+        <div class="meteorito" style="--angulo: 300deg; --duracion: 1.8s; --retraso: 0.2s;"></div>
+        <div class="meteorito" style="--angulo: 55deg; --duracion: 1.4s; --retraso: 0.5s;"></div>
+    </div>
+
+    <div class="letras-contenedor">
+        <span class="letra letra-a" style="--destino: translateX(-320px); animation-delay: 0.9s;">A</span>
+        <span class="letra letra-x" style="--destino: translateX(-230px); animation-delay: 0.6s;">X</span>
+        <span class="letra letra-t" style="--destino: translateX(-140px); animation-delay: 0.3s;">T</span>
+        <img src="logo2-wp.jpg" alt="AXTELIX" class="logo-central">
+        <span class="letra letra-l" style="--destino: translateX(140px); animation-delay: 0.3s;">L</span>
+        <span class="letra letra-i" style="--destino: translateX(230px); animation-delay: 0.6s;">I</span>
+        <span class="letra letra-x2" style="--destino: translateX(320px); animation-delay: 0.9s;">X</span>
+    </div>
+
+    <p class="lema-axtelix">Smart Life Gear</p>
+
+    <div class="carga-contenedor">
+        <span class="texto-cargando">CARGANDO SISTEMA...</span>
+        <div class="barra-fondo"><div class="barra-progreso"></div></div>
+    </div>
+</div>
+
+
+
+    <div class="cart-icon-fixed" id="cart-icon" onclick="openModal('cartModal')">
+        🛒 <span id="cart-count">0</span>
+    </div>
+    
+
+    <header>
+        <h1>Axtelix</h1>
+        <p class="slogan-animado">
+            <span>S</span><span>M</span><span>A</span><span>R</span><span>T</span>&nbsp;
+            <span>L</span><span>I</span><span>F</span><span>E</span>&nbsp;
+            <span>G</span><span>E</span><span>A</span><span>R</span>
+        </p>
+    </header>
+
+    <div class="search-wrapper">
+        <input type="text" id="productSearch" placeholder="Buscar en el catálogo..." onkeyup="filterProducts()" onclick="animarLupa()">
+        <span class="lupa-emoji" id="lupa">🔍</span>
+    </div>
+    
+    <h3 class="category-title">Perfumería</h3>
+    <div class="slider-wrapper">
+        <button class="arrow-btn prev" onclick="scrollSlider('container-perfumes', -1)">&#10094;</button>
+        <div class="container" id="container-perfumes"></div>
+        <button class="arrow-btn next" onclick="scrollSlider('container-perfumes', 1)">&#10095;</button>
+    </div>
+    
+    <h3 class="category-title">Tecnología</h3>
+    <div class="slider-wrapper">
+        <button class="arrow-btn prev" onclick="scrollSlider('container-tech', -1)">&#10094;</button>
+        <div class="container" id="container-tech"></div>
+        <button class="arrow-btn next" onclick="scrollSlider('container-tech', 1)">&#10095;</button>
+    </div>
+
+    <h3 class="category-title">Calzado</h3>
+    <div class="slider-wrapper">
+        <button class="arrow-btn prev" onclick="scrollSlider('container-shoes', -1)">&#10094;</button>
+        <div class="container" id="container-shoes"></div>
+        <button class="arrow-btn next" onclick="scrollSlider('container-shoes', 1)">&#10095;</button>
+    </div>
+
+    <h3 class="category-title">SOFTWARE</h3>
+    <div class="slider-wrapper">
+        <button class="arrow-btn prev" onclick="scrollSlider('container-web', -1)">&#10094;</button>
+        <div class="container" id="container-web"></div>
+        <button class="arrow-btn next" onclick="scrollSlider('container-web', 1)">&#10095;</button>
+    </div>
+    
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AXTELIX HYPER-EXPERIENCE | ELITE RIELE V5</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Space+Grotesk:wght@300;400;700&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- FONDO ATMOSFÉRICO -->
+<div class="axt-universe">
+    <div class="glow-orb orb-gold-1"></div>
+    <div class="glow-orb orb-gold-2"></div>
+    <div class="glow-orb orb-gold-3"></div>
+    <div class="axt-noise-layer"></div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main class="axt-interface-root">
+
+    <!-- HERO HEADER -->
+    <header class="axt-hero-header animate__animated animate__fadeInDown">
+
+        <div class="axt-crown-anchor">
+            <div class="crown-aura"></div>
+            <i class="fas fa-crown crown-main-icon"></i>
+        </div>
+
+        <div class="axt-brand-group">
+            <h1 class="axt-main-title">AXTELIX <span>ELITE</span></h1>
+            <p class="axt-tagline">THE SNEAKER COMMUNITY EXPERIENCE</p>
+        </div>
+
+        <div class="axt-stats-container glass-v3 animate__animated animate__zoomIn animate__delay-1s">
+            <div class="stat-main-score">
+                <h2 id="avgRating">—</h2>
+                <div id="globalStars" class="stars-flex"></div>
+                <label>GLOBAL PRESTIGE</label>
+            </div>
+            <div class="stat-divider-v"></div>
+            <div class="stat-progress-group" id="ratingBarsContainer">
+                <div class="skeleton-bar"></div>
+                <div class="skeleton-bar"></div>
+                <div class="skeleton-bar"></div>
+            </div>
+        </div>
+
+        <div class="axt-action-hub">
+            <button class="axt-btn-v5" onclick="toggleAxtModal()">
+                <i class="fas fa-plus-square"></i> COMPARTIR EXPERIENCIA VIP
+            </button>
+        </div>
+
+    </header>
+
+    <!-- NAVEGACIÓN -->
+    <nav class="axt-navigation-dock animate__animated animate__fadeInUp">
+        <div class="dock-inner">
+            <button class="nav-item active" onclick="filterReviews('all')">
+                <i class="fas fa-border-all"></i> <span>TODAS</span>
+            </button>
+            <div class="dock-separator"></div>
+            <button class="nav-item" onclick="filterReviews('pos')">
+                <i class="fas fa-gem"></i> <span>ELITE</span>
+            </button>
+            <div class="dock-separator"></div>
+            <button class="nav-item" onclick="filterReviews('neg')">
+                <i class="fas fa-bolt"></i> <span>CRÍTICAS</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- RIELE DE CARDS -->
+    <section class="axt-theater-section">
+        <div class="theater-controls hide-mobile">
+            <button class="control-arrow c-left" id="btnPrevAxt"><i class="fas fa-chevron-left"></i></button>
+            <button class="control-arrow c-right" id="btnNextAxt"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="axt-slider-viewport custom-scroll" id="axtViewport">
+            <div class="axt-master-track" id="axtTrack"></div>
+        </div>
+    </section>
+
+</main>
+
+<!-- =============================================
+     FOOTER — DISEÑO LIBRE AXTELIX
+============================================= -->
+<footer class="axt-footer">
+    <div class="footer-bg-mesh"></div>
+    <div class="footer-scanlines"></div>
+
+    <div class="footer-inner">
+
+        <div class="footer-logo-block">
+            <div class="footer-crown-orbit">
+                <i class="fas fa-crown footer-crown-icon"></i>
+                <div class="orbit-ring r1"></div>
+                <div class="orbit-ring r2"></div>
+                <div class="orbit-dot d1"></div>
+                <div class="orbit-dot d2"></div>
+                <div class="orbit-dot d3"></div>
+            </div>
+            <div class="footer-wordmark">
+                <span class="fw-main">AXTELIX</span>
+                <span class="fw-badge">ELITE</span>
+            </div>
+            <p class="footer-tagline-small">SMART LIFE · GEAR</p>
+        </div>
+
+        <div class="footer-rule">
+            <div class="fr-line"></div>
+            <div class="fr-gem"><i class="fas fa-diamond"></i></div>
+            <div class="fr-line"></div>
+        </div>
+
+        <div class="footer-grid">
+            <div class="fg-col">
+                <h4 class="fg-title"><i class="fas fa-layer-group"></i> COMUNIDAD</h4>
+                <ul class="fg-list">
+                    <li>Reviews VIP</li>
+                    <li>Elite Members</li>
+                    <li>Top Drops</li>
+                    <li>Ranking Global</li>
+                </ul>
+            </div>
+
+            <div class="fg-col fg-col--center">
+                <h4 class="fg-title"><i class="fas fa-share-nodes"></i> REDES</h4>
+                <div class="fg-socials">
+
+                    <!-- INSTAGRAM -->
+                    <a href="https://www.instagram.com/axte_lix?igsh=Ym83Y2t3NGhvN2R6"
+                       target="_blank" rel="noopener noreferrer" class="fgs-item">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </a>
+
+                    <!-- TIKTOK -->
+                    <a href="https://www.tiktok.com/@axtelix?_r=1&_t=ZS-9508yrPkPHE"
+                       target="_blank" rel="noopener noreferrer" class="fgs-item">
+                        <i class="fab fa-tiktok"></i>
+                        <span>TikTok</span>
+                    </a>
+
+                    <!-- WHATSAPP — abre chat directo sin guardar número -->
+                    <a href="https://wa.me/527206181781"
+                       target="_blank" rel="noopener noreferrer" class="fgs-item">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+                    </a>
+
+                </div>
+            </div>
+
+            <div class="fg-col fg-col--right">
+                <h4 class="fg-title"><i class="fas fa-location-dot"></i> CONTACTO</h4>
+                <ul class="fg-list">
+                    <li>axtelix.1@gmail.com</li>
+                    <li>Guadalajara</li>
+                    <li>México 🇲🇽</li>
+                    <li>Soporte 24/7</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+            <div class="fbb-ticker">
+                <span>© 2026 AXTELIX ELITE</span>
+                <span class="fbb-sep">◆</span>
+                <span>ALL RIGHTS RESERVED</span>
+                <span class="fbb-sep">◆</span>
+                <span>POWERED BY THE CULTURE</span>
+                <span class="fbb-sep">◆</span>
+                <span>smart life gear</span>
+                <span class="fbb-sep">◆</span>
+                <span>© 2026 AXTELIX ELITE</span>
+                <span class="fbb-sep">◆</span>
+                <span>ALL RIGHTS RESERVED</span>
+                <span class="fbb-sep">◆</span>
+                <span>POWERED BY THE CULTURE</span>
+                <span class="fbb-sep">◆</span>
+                <span>smart life gear</span>
+                <span class="fbb-sep">◆</span>
+            </div>
+        </div>
+
+    </div>
+</footer>
+
+<!-- =============================================
+     MODAL — COMPARTIR EXPERIENCIA
+============================================= -->
+<div id="axtModalReview" class="axt-modal-system">
+    <div class="axt-modal-frame glass-v3 animate__animated animate__zoomIn">
+
+        <div class="modal-top-bar">
+            <div class="m-title-group">
+                <i class="fas fa-shield-alt gold-txt"></i>
+                <h3>AXTELIX PROTOCOL</h3>
+            </div>
+            <button class="axt-close-trigger" onclick="toggleAxtModal()">
+                <div class="cross-line"></div>
+                <div class="cross-line"></div>
+            </button>
+        </div>
+
+        <div class="modal-content-scroll custom-scroll">
+
+            <!-- ESTRELLAS -->
+            <div class="axt-input-section">
+                <label class="axt-field-label">NIVEL DE SATISFACCIÓN</label>
+                <div class="star-rating-v5" id="starInputGroup"></div>
+                <div class="star-feedback">STATUS: <span id="starValueDisplay">0.0</span></div>
+            </div>
+
+            <div class="axt-input-section">
+                <label class="axt-field-label">
+                    ALIAS DEL PROPIETARIO
+                    <span class="field-badge">MÁX. 20</span>
+                </label>
+                <div class="axt-input-wrapper">
+                    <i class="fas fa-at"></i>
+                    <input type="text" id="axtInputName" placeholder="Tu alias corto..."
+                           class="axt-input-field" maxlength="20" autocomplete="off">
+                </div>
+                <div class="mini-counter-row">
+                    <span id="nameCharCount">0</span> / 20 chars
+                </div>
+            </div>
+
+            <div class="axt-input-section">
+                <label class="axt-field-label">
+                    EXPERIENCIA
+                    <span class="field-badge">MÁX. 180</span>
+                </label>
+                <div class="axt-input-wrapper area-wrap">
+                    <textarea id="axtInputText" rows="3"
+                              placeholder="¿Cómo fue tu compra?..."
+                              class="axt-input-field" maxlength="180"></textarea>
+                </div>
+                <div class="word-limit-bar">
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill" id="wordBar"></div>
+                    </div>
+                    <span class="count-txt"><span id="wordCount">0</span> / 180 chars</span>
+                </div>
+            </div>
+
+            <!-- FOTO -->
+            <div class="axt-input-section">
+                <label class="axt-field-label">EVIDENCIA FOTOGRÁFICA</label>
+                <div class="axt-upload-box" onclick="document.getElementById('axtInputImg').click()">
+                    <div id="imgPreview" class="preview-content">
+                        <div class="upload-icon-circle">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <p>ADJUNTAR FOTOGRAFÍA VIP</p>
+                        <span>Formatos: JPG, PNG, WEBP</span>
+                    </div>
+                    <input type="file" id="axtInputImg" accept="image/*" style="display:none">
+                </div>
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="modal-footer-action">
+                <button class="axt-btn-submit" onclick="submitAxtReview()">
+                    <i class="fas fa-paper-plane"></i> DESPLEGAR EN EL RIELE
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div id="axtNotify" class="axt-notification"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+    <div class="trust-section">
+        <div class="trust-item">
+            <h4>🚚 ENVÍOS</h4>
+            <p>De 5 a 7 días hábiles a todo México.</p>
+        </div>
+        <div class="trust-item">
+            <h4>💳 PAGOS</h4>
+            <p>Transferencias, Depósitos y Tarjetas vía WhatsApp.</p>
+        </div>
+        <div class="trust-item">
+            <h4>⭐ CONFIANZA</h4>
+            <p>Garantía de entrega y productos de alta calidad.</p>
+        </div>
+        <div class="trust-item">
+            <h4>📱 ATENCIÓN</h4>
+            <p>Soporte de lunes - viernes 9:00AM - 8:00PM Y sabados de 12:00PM - 8:00PM vía WhatsApp.</p>
+        </div>
+    </div>
+
+    <footer style="padding: 40px 20px; text-align: center;">
+        <p>
+            <span class="legal-link" onclick="openModal('legalModal')">Términos y Condiciones</span> |
+            <span class="legal-link" onclick="openModal('aboutModal')">Quiénes Somos</span> |
+            <span class="legal-link" onclick="openModal('payModal')">Formas de Pago</span>
+        </p>
+        <p style="font-size: 0.7em; color:#444;">© 2026 AXTELIX STORE</p>
+    </footer>
+
+    <div id="cartModal" class="modal">
+    <div class="modal-content">
+        <span style="float:right; cursor:pointer;" onclick="closeModal('cartModal')">✖</span>
+        <h2>Mi Pedido</h2>
+        <div id="cart-items-container"></div>
+        
+        <div class="cupon-wrapper">
+            <p style="font-size: 0.8em; margin-bottom: 5px; color: #aaa;">¿Tienes un cupón?</p>
+            <div class="cupon-input-group">
+                <input type="text" id="input-cupon" placeholder="Código">
+                <button class="btn-cupon" onclick="aplicarCupon()">Canjear</button>
+            </div>
+            <p id="mensaje-cupon" style="font-size: 0.7em; margin-top: 5px;"></p>
+        </div>
+
+        <hr style="border:1px solid #333; margin:15px 0;">
+        
+        <div style="display:flex; justify-content:space-between; font-weight:bold; align-items: center;">
+            <span>Total:</span>
+            <div>
+                <span id="precio-viejo" style="color: #ff4444; text-decoration: line-through; font-size: 0.9em; margin-right: 10px; display: none;"></span>
+                <span id="cart-total" style="font-size: 1.2em;">$0</span>
+            </div>
+        </div>
+
+        <button class="btn-whatsapp-cart" onclick="sendWhatsApp()" style="margin-top: 10px;">Confirmar por WhatsApp</button>
+
+        <div id="pasarela-pago-axtelix" style="margin-top: 20px; border-top: 1px solid #333; padding-top: 15px;">
+            <div style="background: #111; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-top: 15px; font-family: sans-serif;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #222;">
+                    <span style="color: #888; font-size: 0.9rem; font-weight: bold; text-transform: uppercase;">Pago Directo:</span>
+                    <span id="total-carrito" style="color: #ffcc00; font-size: 1.8rem; font-weight: 800;">$0</span>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button onclick="pagoDirecto('mercado')" style="background: #009ee3; color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                        <img src="https://img.icons8.com/color/48/000000/mercado-pago.png" width="20" style="margin-right: 10px;"> Mercado Pago
+                    </button>
+                    <button onclick="pagoDirecto('paypal')" style="background: #ffc439; color: #003087; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                        <img src="https://img.icons8.com/color/48/000000/paypal.png" width="20" style="margin-right: 10px;"> PayPal
+                    </button>
+                    <button onclick="pagoDirecto('transferencia')" style="background: #222; color: #eee; border: 1px solid #444; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                        <img src="https://img.icons8.com/color/48/000000/bank.png" width="20" style="margin-right: 10px;"> Transferencia
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="legalModal" class="modal">
+    <div class="modal-content">
+        <span style="float:right; cursor:pointer; font-weight:bold; color: #d4af37;" onclick="closeModal('legalModal')">✖</span>
+        <h2 style="color: #d4af37; margin-bottom: 15px;">Términos y Condiciones</h2>
+        <div style="text-align: left; font-size: 14px; line-height: 1.6; color: #eee; max-height: 60vh; overflow-y: auto;">
+            <p><b>1. Naturaleza del Servicio:</b> Axtelix opera bajo un modelo de <b>Dropshipping</b>. Al comprar, reconoces que somos intermediarios entre proveedores internacionales y tú.</p>
+            <p><b>2. Envíos:</b> Tiempo estimado de 5 a 7 días hábiles. Puede extenderse en casos excepcionales ajenos a nuestra logística.</p>
+            <p><b>3. Precios:</b> Todos nuestros precios están expresados en <b>MXN</b>. Las ofertas y promociones son por tiempo limitado.</p>
+            <p><b>4. Devoluciones:</b> Solo se aplican por defectos de fábrica reportados en las primeras <b>48 horas</b> tras recibir el producto.</p>
+            <p><b>5. Facturación:</b> Para requerir facturas fiscales, es necesario contactar vía WhatsApp antes de realizar el pago.</p>
+        </div>
+    </div>
+</div>
+
+<div id="aboutModal" class="modal">
+    <div class="modal-content">
+        <span style="float:right; cursor:pointer; font-weight:bold; color: #d4af37;" onclick="closeModal('aboutModal')">✖</span>
+        <h2 style="color: #d4af37; margin-bottom: 15px;">Quiénes Somos</h2>
+        <p style="text-align: justify; color: #eee; line-height: 1.6;">
+            Bienvenido a <b>Axtelix</b>, más que una tienda, somos sus aliados en la búsqueda de la distinción. 
+            Nuestra misión es simplificar el acceso a lo extraordinario, seleccionando cuidadosamente cada pieza de nuestra colección de perfumería fina, tecnología de vanguardia y calzado de edición especial. 
+            Nos mueve la pasión por los detalles y el compromiso de acompañarle en cada paso de su elección.
+        </p>
+    </div>
+</div>
+
+<div id="payModal" class="modal">
+    <div class="modal-content">
+        <span style="float:right; cursor:pointer; font-weight:bold; color: #d4af37;" onclick="closeModal('payModal')">✖</span>
+        <h2 style="color: #d4af37; margin-bottom: 15px;">Formas de Pago</h2>
+        <div style="text-align: left; color: #eee; line-height: 2;">
+            <p>• <b style="color: #d4af37;">PayPal</b> (Crédito/Débito)</p>
+            <p>• <b style="color: #d4af37;">Transferencia Bancaria</b> (SPEI)</p>
+            <p>• <b style="color: #d4af37;">Depósito en OXXO</b></p>
+            <p>• <b style="color: #d4af37;">Mercado Pago / Clip</b></p>
+        </div>
+    </div>
+</div>
+
+<div id="detailsModal" class="modal">
+    <div class="modal-content">
+        <span style="float:right; cursor:pointer;" onclick="closeModal('detailsModal')">✖</span>
+        <h2 id="detailName"></h2>
+        <p id="detailInfo"></p>
+    </div>
+</div>
+
+
+
+<script>
+    let cart = [];
+    let descuentoAplicado = 0;
+    let INVENTARIO = [];
+
+    async function cargarInventario() {
+        try {
+            console.log("Conectando al Búnker de Axtelix...");
+            const respuesta = await fetch('https://axtelix-backend.onrender.com/obtener-productos');
+            const datos = await respuesta.json();
+
+            // 1. TRADUCTOR: Ajustado a los nombres reales de tu Supabase
+            INVENTARIO = datos.map(p => {
+                return {
+                    id: p.id,
+                    nombre: p.nombre,
+                    precio: p.precio, 
+                    precioOriginal: p.precio_original || p.precio, 
+                    img: p.img, 
+                    desc: p.desc_producto || "Sin descripción",
+                    cat: p.cat || "perfumes", // Usamos 'cat' que es como está en tu captura
+                    oferta: p.oferta || false,
+                    agotado: p.agotado || false
+                };
+            });
+
+            console.log("Inventario cargado exitosamente:", INVENTARIO);
+            renderizarProductos();
+
+        } catch (error) {
+            console.error("❌ Error conectando con el backend:", error);
+            document.body.innerHTML += `<div style="position:fixed; top:0; background:red; color:white; width:100%; text-align:center; z-index:9999;">Error de conexión con el Búnker</div>`;
+        }
+    }
+
+    function renderizarProductos() {
+        // 2. MAPEO: Vinculamos el nombre de la base de datos con el ID de tu HTML
+        const contenedores = {
+            'perfumes': document.getElementById('container-perfumes'),
+            'tech': document.getElementById('container-tech'),
+            'shoes': document.getElementById('container-shoes'),
+            'web': document.getElementById('container-web')
+        };
+
+        // Limpiar contenedores
+        Object.values(contenedores).forEach(c => { if(c) c.innerHTML = ''; });
+
+        INVENTARIO.forEach(p => {
+            // Validamos que 'cat' exista antes de usar toLowerCase() para evitar el error de la consola
+            const categoriaLimpia = (p.cat || "").toLowerCase().trim();
+            
+            const esAgotado = p.agotado ? 'sold-out' : '';
+            const badgeAgotado = p.agotado ? `<div class="badge-agotado">SOLD OUT</div>` : '';
+            const badgeOferta = p.oferta && !p.agotado ? `<div class="badge-oferta">OFERTA 🔥</div>` : '';
+            const textoBoton = p.agotado ? "SIN STOCK" : "AÑADIR AL CARRITO";
+            const precioTachado = p.oferta ? `<span style="text-decoration: line-through; color: #888; font-size: 0.8rem; display: block;">$${p.precioOriginal}</span>` : '';
+
+            const html = `
+                <div class="product-card ${esAgotado}">
+                    ${badgeOferta}
+                    ${badgeAgotado}
+                    <h3>${p.nombre}</h3>
+                    <span class="price">${precioTachado} $${p.precio}</span>
+                    <img src="${p.img}" alt="${p.nombre}" onclick="showProductDetails('${p.nombre}', '${p.desc}')">
+                    <button class="btn-details" onclick="showProductDetails('${p.nombre}', '${p.desc}')">Detalles</button>
+                    <button class="btn-add-cart" onclick="addToCart('${p.nombre}', ${p.precio}, this)" ${p.agotado ? 'disabled' : ''}>
+                        ${textoBoton}
+                    </button>
+                </div>
+            `;
+
+            // 3. Colocamos el producto en su lugar
+            const target = contenedores[categoriaLimpia];
+            if (target) {
+                target.innerHTML += html;
+            } else {
+                // Si la categoría no coincide, lo mandamos a perfumes por defecto para que no desaparezca
+                if(contenedores['perfumes']) contenedores['perfumes'].innerHTML += html;
+            }
+        });
+
+        if (typeof activarSensores === 'function') setTimeout(activarSensores, 500);
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarInventario);
+
+        // --- ANIMACIÓN DE LA LUPA ---
+        function animarLupa() {
+            const lupa = document.getElementById('lupa');
+            const searchInput = document.getElementById('productSearch');
+            
+            // Efecto lupa feliz gira
+            lupa.classList.add('lupa-feliz');
+            setTimeout(() => {
+                lupa.classList.remove('lupa-feliz');
+                // Expandir texto (letter-spacing)
+                searchInput.style.letterSpacing = "2px";
+            }, 700);
+        }
+
+        function scrollSlider(id, direction) {
+    const container = document.getElementById(id);
+    const scrollAmount = 320 * direction;
+    
+    // Si la pantalla es pequeña (celular), que sea instantáneo
+    if (window.innerWidth <= 768) {
+        container.scrollBy({
+            left: scrollAmount,
+            behavior: 'auto' // 'auto' es instantáneo, sin esperas ni trabas
+        });
+        return; // Salimos de la función para que no intente hacer lo lento
+    }
+
+    // --- Si es PC, sigue con tu animación suave de siempre ---
+    const start = container.scrollLeft;
+    const duration = 1300; // Aquí puedes dejarlo en 1300 o lo que prefieras para PC
+    let startTime = null;
+
+    function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+        const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        container.scrollLeft = start + (scrollAmount * ease);
+        if (timeElapsed < duration) requestAnimationFrame(animation);
+    }
+    requestAnimationFrame(animation);
+}
+
+        function addToCart(nameOrBtn, price, btnElement) {
+    let nombre, precio, btn;
+
+    // --- 1. DETECCIÓN DE FORMATO (Compatibilidad Total) ---
+    if (typeof nameOrBtn === 'string') {
+        // Formato viejo: addToCart('Dunk', 790, this)
+        nombre = nameOrBtn;
+        precio = price;
+        btn = btnElement;
+    } else {
+        // Formato nuevo: addToCart(this)
+        btn = nameOrBtn;
+        const card = btn.closest('.product-card');
+        nombre = card.querySelector('h3').innerText;
+        precio = card.querySelector('.price').innerText;
+    }
+
+    const card = btn.closest('.product-card');
+    const tallaSel = card.querySelector('.size-btn.active');
+    
+    // --- 2. VALIDACIÓN DE TALLA ---
+    if (card.querySelector('.size-options') && !tallaSel) {
+        alert("Por favor, selecciona una talla");
+        return;
+    }
+
+    // --- 3. GUARDAR EN EL CARRITO (Doble nombre para evitar errores) ---
+    const producto = {
+        nombre: nombre,      // Para el Ticket
+        name: nombre,        // Para que el carrito viejo lo reconozca
+        precio: String(precio),
+        price: precio,       // Para que el carrito viejo lo reconozca
+        talla: tallaSel ? tallaSel.innerText : null,
+        cantidad: 1
+    };
+    cart.push(producto);
+
+    // --- 4. ANIMACIONES (Tu código original mejorado) ---
+    const cartIcon = document.getElementById('cart-icon');
+    if (cartIcon) {
+        cartIcon.classList.remove('cart-pop');
+        void cartIcon.offsetWidth; // Reinicia animación
+        cartIcon.classList.add('cart-pop');
+    }
+    
+    // Feedback en el botón
+    const originalText = btn.innerText;
+    const originalBG = btn.style.backgroundColor;
+
+    btn.innerText = "¡AÑADIDO!";
+    btn.style.backgroundColor = "#d4af37";
+    btn.style.color = "#000000"; // Asegura que el texto se vea
+    
+    setTimeout(() => {
+        btn.innerText = "AÑADIR AL CARRITO";
+        btn.style.backgroundColor = "#ffffff";
+        btn.style.color = "#000000";
+    }, 800);
+
+    // --- 5. ACTUALIZAR INTERFAZ ---
+    // Llamamos a ambas por si acaso, así no falla nada arriba
+    if (typeof actualizarCarrito === 'function') actualizarCarrito();
+    if (typeof updateCartUI === 'function') updateCartUI();
+}
+
+        function updateCartUI() {
+    document.getElementById('cart-count').innerText = cart.length;
+    const container = document.getElementById('cart-items-container');
+    const totalEl = document.getElementById('cart-total');
+    container.innerHTML = '';
+    let subtotal = 0;
+
+    // 1. Agrupamos los productos por nombre para sumar cantidades
+    const cartGrouped = {};
+    cart.forEach((item, index) => {
+        subtotal += item.price;
+        if (cartGrouped[item.name]) {
+            cartGrouped[item.name].quantity += 1;
+            // Guardamos el primer índice que encontremos para que el botón eliminar funcione
+            cartGrouped[item.name].originalIndices.push(index);
+        } else {
+            cartGrouped[item.name] = { 
+                ...item, 
+                quantity: 1, 
+                originalIndices: [index] 
+            };
+        }
+    });
+
+    // 2. Renderizamos los productos ya agrupados
+    Object.values(cartGrouped).forEach(item => {
+        const lastIndex = item.originalIndices[item.originalIndices.length - 1];
+        container.innerHTML += `
+        <div class="cart-item">
+        <span>${item.quantity}x ${item.name}</span>
+        <span>$${item.price * item.quantity}</span>
+        <button onclick="removeFromCart(${lastIndex})" 
+                style="background:none; border:none; color:#ff4d4d; cursor:pointer; font-size:16px; margin-left:10px;">
+            ✖
+        </button>
+    </div>`;
+    });
+
+    // 3. Lógica del total con descuento (se queda igual a como la tenías)
+    let finalTotal = subtotal - descuentoAplicado;
+    if(finalTotal < 0) finalTotal = 0;
+    
+    totalEl.innerHTML = descuentoAplicado > 0 
+        ? `<small style="color:red; text-decoration:line-through;">$${subtotal}</small> $${finalTotal}`
+        : `$${subtotal}`;
+}
+
+        async function aplicarCupon() {
+            const input = document.getElementById('input-cupon').value.trim().toUpperCase();
+            const mensaje = document.getElementById('mensaje-cupon');
+            if (!input) return;
+            mensaje.style.color = "white";
+            mensaje.innerText = "Validando...";
+
+            try {
+                const respuesta = await fetch('https://axtelix-backend.onrender.com/validar-cupon', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ codigo: input })
+                });
+                const data = await respuesta.json();
+                if (data.valido) {
+                    descuentoAplicado = data.descuento;
+                    mensaje.style.color = "#25d366";
+                    mensaje.innerText = `¡Cupón Aplicado! -$${descuentoAplicado} MXN`;
+                    updateCartUI();
+                } else {
+                    mensaje.style.color = "red";
+                    mensaje.innerText = data.mensaje;
+                }
+            } catch (error) {
+                mensaje.style.color = "orange";
+                mensaje.innerText = "Error de conexión.";
+            }
+        }
+
+        function removeFromCart(index) { 
+            cart.splice(index, 1); 
+            updateCartUI(); 
+        }
+
+        function sendWhatsApp() {
+    if(cart.length === 0) return alert("El carrito está vacío");
+
+    let subtotal = 0;
+    const cartGrouped = {};
+
+    // 1. Agrupamos y sumamos el subtotal
+    cart.forEach(item => {
+        subtotal += item.price;
+        cartGrouped[item.name] = (cartGrouped[item.name] || 0) + 1;
+    });
+
+    let msg = "¡Hola Axtelix! Deseo comprar:%0A";
+
+    // 2. Creamos la lista con el formato "2x Producto"
+    for (const [name, quantity] of Object.entries(cartGrouped)) {
+        msg += `- ${quantity}x ${name}%0A`;
+    }
+
+    // 3. Cálculo de totales (manteniendo tu lógica de cupones)
+    let totalFinal = subtotal - descuentoAplicado;
+    if(totalFinal < 0) totalFinal = 0;
+
+    if(descuentoAplicado > 0) msg += `%0ADESCUENTO: -$${descuentoAplicado}%0A`;
+    
+    msg += `%0ATotal Final: $${totalFinal}%0A%0A¿Me podrían proporcionar los métodos de pago?`;
+
+    // 4. Abrir WhatsApp
+    window.open(`https://wa.me/527206181781?text=${msg}`);
+}
+
+        function filterProducts() {
+            const input = document.getElementById('productSearch').value.toLowerCase();
+            const cards = document.getElementsByClassName('product-card');
+            for (let card of cards) {
+                const title = card.getElementsByTagName('h3')[0].innerText.toLowerCase();
+                card.classList.toggle('hidden', !title.includes(input));
+            }
+        }
+
+        function showProductDetails(name, info) {
+            document.getElementById('detailName').innerText = name;
+            document.getElementById('detailInfo').innerText = info;
+            openModal('detailsModal');
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = "block"; }
+        function closeModal(id) { document.getElementById(id).style.display = "none"; }
+        window.onclick = function(e) { if(e.target.className === 'modal') e.target.style.display = "none"; }
+        window.onload = renderizarProductos;
+
+
+        // Configuramos el "Sensor"
+const observerOptions = {
+    root: null, // usa la pantalla como referencia
+    threshold: 0.7 // el producto debe estar al 70% visible para activarse
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            // Cuando el producto entra al centro, brilla
+            entry.target.classList.add('active');
+        } else {
+            // Cuando se sale del centro, se apaga
+            entry.target.classList.remove('active');
+        }
+    });
+}, observerOptions);
+
+// Función para decirle al sensor qué observar
+function activarSensores() {
+    const productos = document.querySelectorAll('.product-card');
+    productos.forEach(p => observer.observe(p));
+}
+
+// Lo ejecutamos después de que se carguen los productos
+// Como tú usas renderizarProductos(), hay que llamarla ahí
+setTimeout(activarSensores, 1000);
+
+
+
+function crearEstrellaAmbiente() {
+    const estrella = document.createElement('span');
+    
+    // 1. Crea tu lista de emojis favoritos aquí
+    const emojis = ['⭐', '⚡']; 
+    
+    // 2. Esta línea elige uno al azar de la lista
+    const emojiRandom = emojis[Math.floor(Math.random() * emojis.length)];
+    
+    estrella.textContent = emojiRandom;
+    estrella.className = 'estrella-ambiente';
+
+    // ... (el resto de tu código de tamaño y posición se queda igual)
+    // 1. Tamaño aleatorio
+    const size = Math.floor(Math.random() * 2) + 1; // 1.5rem, 2.5rem
+    estrella.style.fontSize = `${size}rem`;
+
+    // 2. Posición aleatoria en toda la página
+    const posX = Math.floor(Math.random() * window.innerWidth);
+    const posY = Math.floor(Math.random() * document.body.scrollHeight);
+    
+    estrella.style.left = `${posX}px`;
+    estrella.style.top = `${posY}px`;
+
+    // 3. Dirección de flotación aleatoria para que se muevan a distintos lados
+    const floatX = (Math.random() - 0.5) * 200; // Se mueve de -100px a +100px en X
+    const floatY = (Math.random() - 0.5) * 200; // Se mueve de -100px a +100px en Y
+    estrella.style.setProperty('--float-x', `${floatX}px`);
+    estrella.style.setProperty('--float-y', `${floatY}px`);
+
+    // 4. Aplicar la animación de flotar y desvanecer
+    estrella.style.animation = `estrellaFlotante ${Math.random() * 8 + 5}s forwards`; // Duración entre 5 y 13 segundos
+
+    document.body.appendChild(estrella);
+
+    // 5. Limpiar el HTML después de que la estrella se desvanezca
+    setTimeout(() => {
+        estrella.remove();
+    }, 13000); // Un poco más del máximo de la animación
+}
+
+// Lanza una estrella nueva cada 1.5 segundos (puedes ajustar el tiempo)
+setInterval(crearEstrellaAmbiente, 1500);
+
+function lluviaDeEstrellas() {
+    // Definimos cuántas estrellas queremos que salgan al mismo tiempo
+    // En este caso, saldrán entre 2 y 5 estrellas cada vez
+    const cantidad = Math.floor(Math.random() * 4) + 2; 
+
+    for (let i = 0; i < cantidad; i++) {
+        // Usamos un pequeño delay para que no aparezcan todas exactamente al mismo milisegundo
+        setTimeout(crearEstrellaAmbiente, Math.random() * 500);
+    }
+}
+
+// Ahora llamamos a la "lluvia" cada 2 segundos
+setInterval(lluviaDeEstrellas, 2000);
+
+
+
+document.addEventListener('keydown', function (e) {
+    // Bloquea Ctrl + Plus, Ctrl + Minus y Ctrl + Zero
+    if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+        e.preventDefault();
+    }
+});
+
+document.addEventListener('wheel', function (e) {
+    // Bloquea el Ctrl + Rueda del ratón
+    if (e.ctrlKey) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+const productos = ["Sauvage Dior", "Nike Dunk Low", "Bleu de Chanel", "Versace Eros"];
+const ciudades = ["CDMX", "Monterrey", "Guadalajara", "Cancún", "Querétaro"];
+
+function mostrarNotificacion() {
+    const proof = document.getElementById('social-proof') || document.createElement('div');
+    proof.id = 'social-proof';
+    document.body.appendChild(proof);
+
+    const p = productos[Math.floor(Math.random()*productos.length)];
+    const c = ciudades[Math.floor(Math.random()*ciudades.length)];
+    
+    proof.innerHTML = `🛍️ <b>Alguien en ${c}</b><br>compró un ${p} hace un momento.`;
+    proof.style.left = '20px';
+
+    setTimeout(() => { proof.style.left = '-300px'; }, 5000); // Se esconde tras 5s
+}
+setInterval(mostrarNotificacion, 60000); // Sale cada 60 segundos
+
+
+// ==========================================
+// ⚙️ CONFIGURACIÓN MAESTRA AXTELIX V4.0 (ULTRA LIFE)
+// ==========================================
+const CONFIG_SISTEMA = {
+    // 🛠️ CONTROL DE MANTENIMIENTO (false = ACTIVO / true = MANTENIMIENTO)
+    mantenimiento: {
+        paypal: true,
+        mercadoPago: true,
+        transferencia: false
+    },
+
+    // 🔗 LINK DE PAGO DIRECTO PAYPAL
+    linkPayPal: "https://www.paypal.com/qrcodes/tu-link-aqui",
+
+    // 💳 DATOS TARJETA 1 (MERCADO PAGO)
+    datosMercadoPago: {
+        nombre: "Mercado Pago",
+        numero: "5256 7890 1234 5678",
+        titular: "LUIS VILLA"
+    },
+
+    // 💳 DATOS TARJETA 2 (TRANSFERENCIA BANCARIA)
+    datosBanco: {
+        nombre: "BanCoppel",
+        clabe: "1373 2610 0767 5685 10",
+        titular: "ENRIQUE VILLA"
+    },
+
+    // 🛡️ BÚNKERES DE SEGURIDAD RENDER (Cero Keys Expuestas)
+    bunker: {
+        urlA: "https://axtelix-backend.onrender.com",
+        urlB: "https://axtelix-respaldo.onrender.com"
+    }
+};
+
+// ==========================================
+// 1. NÚCLEO DE PRECIOS Y FOLIOS
+// ==========================================
+window.actualizarTodoElSistema = function() {
+    const totalDorado = document.getElementById('total-carrito');
+    const totalOriginal = document.getElementById('cart-total');
+    const precioViejo = document.getElementById('precio-viejo');
+
+    if (typeof cart !== 'undefined' && totalOriginal) {
+        const sumaBase = cart.reduce((acc, p) => {
+            let pLimpio = parseFloat(String(p.precio || p.price).replace(/[$,]/g, '')) || 0;
+            return acc + (pLimpio * (p.cantidad || 1));
+        }, 0);
+
+        let textoLimpio = totalOriginal.innerText.replace(/[$,]/g, '').trim();
+        if (textoLimpio.includes(' ')) {
+            const partes = textoLimpio.split(/\s+/);
+            textoLimpio = partes[partes.length - 1];
+        }
+
+        let sumaActual = parseFloat(textoLimpio);
+        if (isNaN(sumaActual) || sumaActual <= 0) sumaActual = sumaBase;
+
+        const valorFinal = "$" + sumaActual.toFixed(0);
+        if (totalOriginal.innerText !== valorFinal) totalOriginal.innerText = valorFinal;
+        if (totalDorado) totalDorado.innerText = "$" + sumaActual.toFixed(2);
+        
+        document.querySelectorAll('.pago-directo-total').forEach(el => el.innerText = "$" + sumaActual.toFixed(2));
+
+        if (sumaActual < (sumaBase - 1) && precioViejo) {
+            precioViejo.innerText = "$" + sumaBase.toFixed(2);
+            precioViejo.style.display = "inline-block";
+        } else if (precioViejo) {
+            precioViejo.style.display = "none";
+        }
+    }
+};
+
+setInterval(window.actualizarTodoElSistema, 1000);
+
+window.obtenerSiguienteFolio = function() {
+    let ultimoFolio = localStorage.getItem('ultimo_folio_axtelix') || 0;
+    let nuevoFolio = parseInt(ultimoFolio) + 1;
+    localStorage.setItem('ultimo_folio_axtelix', nuevoFolio);
+    return "AXT-" + nuevoFolio;
+};
+
+// ==========================================
+// 2. PROCESO DE PAGO Y CHECKOUT
+// ==========================================
+window.pagoDirecto = function(metodo) {
+    window.actualizarTodoElSistema();
+    
+    const esMant = (metodo === 'paypal' && CONFIG_SISTEMA.mantenimiento.paypal) ||
+                   (metodo === 'mercado' && CONFIG_SISTEMA.mantenimiento.mercadoPago) ||
+                   (metodo === 'transferencia' && CONFIG_SISTEMA.mantenimiento.transferencia);
+
+    if (esMant) {
+        mostrarAvisoMantenimiento(metodo);
+        return;
+    }
+
+    if (!cart || cart.length === 0) { alert("🛒 Tu carrito está vacío."); return; }
+
+    const productosAgrupados = {};
+    cart.forEach(p => {
+        const nombre = p.nombre || p.titulo || p.name || "Producto";
+        const talla = p.talla ? ` (${p.talla})` : "";
+        const idUnico = nombre + talla;
+        productosAgrupados[idUnico] = (productosAgrupados[idUnico] || 0) + (p.cantidad || 1);
+    });
+    
+    const resumenDinamico = Object.entries(productosAgrupados).map(([name, qty]) => `${qty}x ${name}`).join('\n- ');
+    let totalExhibido = document.getElementById('total-carrito').innerText;
+    const precioNumerico = totalExhibido.replace(/[^\d.]/g, ''); 
+
+    const checkoutCapa = document.createElement('div');
+    checkoutCapa.id = "capa-checkout";
+    
+    checkoutCapa.innerHTML = `
+    <div class="modal-container-axt">
+        <button onclick="document.getElementById('capa-checkout').remove()" class="axt-close-btn">&times;</button>
+        
+        <div class="header-axt" style="margin-bottom:25px;">
+            <h2 style="margin:0; font-weight:800; font-size:26px; letter-spacing:-1px;">Finalizar Pedido</h2>
+            <p style="font-size:13px; color:#94a3b8; margin-top:5px;">Estás pagando vía <span style="color:var(--gold-axtelix); font-weight:bold;">${metodo.toUpperCase()}</span></p>
+        </div>
+
+        <div class="form-grid-axt">
+            <input type="text" id="ins-nom" placeholder="Nombre completo" class="input-axt">
+            <input type="text" id="ins-dir" placeholder="Calle y número de casa" class="input-axt">
+            <input type="text" id="ins-logistica" placeholder="Colonia, CP y Ciudad" class="input-axt">
+            <input type="tel" id="ins-tel" placeholder="WhatsApp (10 dígitos)" class="input-axt">
+            <textarea id="ins-ref" placeholder="Referencias de tu casa..." class="input-axt" style="height:80px; resize:none;"></textarea>
+        </div>
+
+        <div class="total-box-axt">
+            <p style="margin:0; font-size:10px; color:var(--gold-axtelix); letter-spacing:2px; font-weight:bold;">TOTAL A PAGAR</p>
+            <p style="margin:5px 0 0 0; font-size:32px; font-weight:900;">${totalExhibido}</p>
+        </div>
+
+        <button id="btn-next-step" class="btn-primary-axt">CONFIRMAR Y CONTINUAR</button>
+    </div>`;
+    document.body.appendChild(checkoutCapa);
+
+    document.getElementById('btn-next-step').onclick = async function() {
+        const data = {
+            nom: document.getElementById('ins-nom').value.trim(),
+            dir: document.getElementById('ins-dir').value.trim(),
+            log: document.getElementById('ins-logistica').value.trim(),
+            tel: document.getElementById('ins-tel').value.trim(),
+            ref: document.getElementById('ins-ref').value.trim()
+        };
+
+        if(!data.nom || !data.dir || !data.log || data.tel.length < 10) { 
+            alert("⚠️ Por favor, llena todos los campos correctamente."); 
+            return; 
+        }
+        
+        const folio = window.obtenerSiguienteFolio();
+        const metodoTexto = metodo === 'paypal' ? 'PayPal' : metodo === 'mercado' ? 'Mercado Pago' : 'Transferencia';
+
+        const datosVenta = { 
+            Folio: folio, 
+            Cliente: data.nom, 
+            Whatsapp: data.tel, 
+            Direccion: `${data.dir}, ${data.log}. Ref: ${data.ref}`, 
+            Total: parseFloat(precioNumerico) || 0, 
+            Metodo: metodoTexto, 
+            Productos: resumenDinamico 
+        };
+
+        // 🛡️ SISTEMA DE SALTO: BÚNKER A -> BÚNKER B
+        try {
+            console.log("Intentando Búnker A...");
+            let res = await fetch(`${CONFIG_SISTEMA.bunker.urlA}/registrar-venta`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datosVenta)
+            });
+            if (!res.ok) throw new Error("A_DORMIDO");
+        } catch(e) {
+            console.warn("⚠️ Búnker A no responde. Activando Búnker B...");
+            try {
+                await fetch(`${CONFIG_SISTEMA.bunker.urlB}/registrar-venta`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datosVenta)
+                });
+            } catch (errB) {
+                console.error("❌ Ambos búnkeres fallaron.");
+            }
+        }
+
+        mostrarPasoFinal(checkoutCapa, folio, data, resumenDinamico, totalExhibido, metodo);
+    };
+};
+
+// ==========================================
+// 3. UI PASO FINAL (DISEÑO DINÁMICO)
+// ==========================================
+function mostrarPasoFinal(capa, folio, data, resumen, total, metodo) {
+    const modal = capa.querySelector('.modal-container-axt');
+    modal.style.opacity = '0';
+    
+    setTimeout(() => {
+        let contenidoPago = '';
+
+        if (metodo === 'transferencia' || metodo === 'mercado') {
+            const esMP = metodo === 'mercado';
+            const claseCard = esMP ? "card-front card-mercado" : "card-front";
+            
+            const bancoNombre = esMP ? CONFIG_SISTEMA.datosMercadoPago.nombre : CONFIG_SISTEMA.datosBanco.nombre;
+            const numeroMostrado = esMP ? CONFIG_SISTEMA.datosMercadoPago.numero : CONFIG_SISTEMA.datosBanco.clabe;
+            const titularMostrado = esMP ? CONFIG_SISTEMA.datosMercadoPago.titular : CONFIG_SISTEMA.datosBanco.titular;
+            const tituloTarjeta = esMP ? 'MERCADO PAGO DIGITAL' : 'AXTELIX REWARDS CARD';
+
+            contenidoPago = `
+                <div class="card-axtelix" onclick="copiarClabeAxt('${metodo}')">
+                    <div class="${claseCard}">
+                        <div class="card-bank-name">${tituloTarjeta}</div>
+                        <div class="card-chip-gold"></div>
+                        <div class="card-number-display">${numeroMostrado}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                            <div class="card-holder-area">
+                                <div class="holder-label">TITULAR</div>
+                                <div class="holder-name">${titularMostrado}</div>
+                            </div>
+                            <div class="card-type-label">${bancoNombre}</div>
+                        </div>
+                    </div>
+                </div>
+                <p style="margin-top:10px; font-size:11px; color:var(--gold-axtelix); font-weight:bold; letter-spacing:1px;">
+                    👆 Toca la tarjeta para copiar el número
+                </p>`;
+        } else if (metodo === 'paypal') {
+            contenidoPago = `
+                <div style="background: linear-gradient(135deg, #003087 0%, #009cde 100%); padding:25px; border-radius:28px; text-align:center; min-height:220px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <div style="font-size:45px; margin-bottom:10px;">💳</div>
+                    <h3 style="margin:0; font-size:18px; color:#fff;">Pago Seguro PayPal</h3>
+                    <p style="font-size:12px; opacity:0.9; margin:15px 0; color:#fff;">Haz clic abajo para completar tu compra.</p>
+                    <a href="${CONFIG_SISTEMA.linkPayPal}" target="_blank" class="btn-primary-axt btn-paypal-axt" style="text-decoration:none; width:100%; max-width:250px;">PAGAR AHORA</a>
+                </div>`;
+        }
+
+        modal.innerHTML = `
+            <button onclick="document.getElementById('capa-checkout').remove()" class="axt-close-btn">&times;</button>
+            <h2 style="margin-bottom:20px; font-weight:800; font-size:22px;">¡Pedido Registrado!</h2>
+            
+            ${contenidoPago}
+
+            <div class="resumen-final-box">
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px; margin-bottom:8px;">
+                    <span style="font-weight:bold; color:#94a3b8; font-size:12px;">FOLIO:</span>
+                    <span style="font-weight:900; color:var(--gold-bright);">${folio}</span>
+                </div>
+                <p style="font-size:11px; opacity:0.8; line-height:1.4; text-align:left; color:#fff;">${resumen}</p>
+                <div style="margin-top:10px; text-align:right;">
+                    <span style="font-size:22px; font-weight:900;">${total}</span>
+                </div>
+            </div>
+
+            <button id="btn-wsp" class="btn-whatsapp-axt">ENVIAR COMPROBANTE 📲</button>
+            
+            <div class="ayuda-pago-container">
+                <button onclick="toggleAyudaAxt()" class="btn-ayuda-link">¿Cómo funciona mi pago?</button>
+                <div id="ayuda-guia" class="ayuda-guia-content">
+                    <div class="paso-pago"><p>1️⃣ Copia los datos de la tarjeta arriba.</p></div>
+                    <div class="paso-pago"><p>2️⃣ Transfiere el total de <b>${total}</b>.</p></div>
+                    <div class="paso-pago"><p>3️⃣ Envía el comprobante para procesar tu envío.</p></div>
+                </div>
+            </div>
+        `;
+        modal.style.opacity = '1';
+
+        document.getElementById('btn-wsp').onclick = function() {
+            const msg = `📦 *AXTELIX SHOP - NUEVO PEDIDO*\n🆔 *FOLIO:* ${folio}\n👤 *Cliente:* ${data.nom}\n💰 *Total:* ${total}\n💳 *Método:* ${metodo.toUpperCase()}\n🛍️ *Productos:* \n- ${resumen}\n\n*Adjunto comprobante.*`;
+            window.open(`https://wa.me/527206181781?text=${encodeURIComponent(msg)}`, "_blank");
+            capa.remove();
+        };
+    }, 300);
+}
+
+// ==========================================
+// 4. FUNCIONES DE INTERACCIÓN
+// ==========================================
+window.toggleAyudaAxt = function() {
+    const content = document.getElementById('ayuda-guia');
+    content.classList.toggle('show');
+};
+
+window.copiarClabeAxt = function(metodo) {
+    const numeroCopiar = metodo === 'mercado' ? CONFIG_SISTEMA.datosMercadoPago.numero : CONFIG_SISTEMA.datosBanco.clabe;
+    const clabeLimpia = numeroCopiar.replace(/\s/g, ''); 
+    
+    navigator.clipboard.writeText(clabeLimpia).then(() => {
+        const aviso = document.createElement('div');
+        aviso.style = `
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
+            background: #d4af37; color: #000; padding: 15px 30px; border-radius: 50px; 
+            font-weight: 900; z-index: 10000000; font-size: 14px; 
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.6); animation: fadeInAxt 0.3s ease;
+        `;
+        aviso.innerText = "✨ ¡NÚMERO COPIADO EXITOSAMENTE!";
+        document.body.appendChild(aviso);
+        setTimeout(() => {
+            aviso.style.opacity = "0";
+            aviso.style.transition = "0.5s";
+            setTimeout(() => aviso.remove(), 500);
+        }, 2000);
+    });
+};
+
+function mostrarAvisoMantenimiento(metodo) {
+    const aviso = document.createElement('div');
+    aviso.id = "capa-checkout"; 
+    aviso.innerHTML = `
+        <div class="modal-container-axt" style="max-width:380px;">
+            <div style="font-size:60px; margin-bottom:15px;">🛠️</div>
+            <h2 style="margin:0; font-size:24px; font-weight:800;">Mantenimiento</h2>
+            <p style="color:#94a3b8; margin-top:15px; font-size:15px;">El sistema de <b>${metodo.toUpperCase()}</b> se está actualizando.</p>
+            <button onclick="this.parentElement.parentElement.remove()" class="btn-primary-axt" style="margin-top:25px;">ENTENDIDO</button>
+        </div>`;
+    document.body.appendChild(aviso);
+}
+
+// --- SINCRONIZACIÓN CON RENDER (AHORA USA EL BÚNKER DINÁMICO) ---
+async function actualizarInventarioReal() {
+    console.log("Iniciando sincronización Axtelix...");
+    const loader = document.getElementById('loader-axtelix');
+    const wspBtn = document.querySelector('.joinchat, .whatsapp-button');
+
+    try {
+        const respuesta = await fetch(`${CONFIG_SISTEMA.bunker.urlA}/obtener-inventario?v=` + Date.now());
+        const datosNuevos = await respuesta.json();
+
+        if (datosNuevos && datosNuevos.length > 0) {
+            PERFUMERIA = []; TECNOLOGIA = []; CALZADO = []; SOFTWARE = [];
+            datosNuevos.forEach(p => {
+                const catExcel = p.Categoria ? p.Categoria.toLowerCase().trim() : '';
+                const item = { nombre: p.Producto, precio: parseFloat(p.Precio_Venta), img: p.Imagen_URL, desc: p.Descripcion, stock: p.Stock, cat: p.Categoria };
+                if (catExcel.includes('perfume')) PERFUMERIA.push(item);
+                else if (catExcel.includes('tecnolog')) TECNOLOGIA.push(item);
+                else if (catExcel.includes('calzado')) CALZADO.push(item);
+                else SOFTWARE.push(item);
+            });
+            productos = [...PERFUMERIA, ...TECNOLOGIA, ...CALZADO, ...SOFTWARE];
+            if (typeof mostrarProductos === "function") mostrarProductos('todos'); 
+        }
+    } catch (e) { console.warn("Modo offline o Búnker A dormido."); }
+    
+    if (loader) loader.style.display = 'none';
+    if (wspBtn) wspBtn.style.display = 'block';
+}
+
+actualizarInventarioReal();
+window.addEventListener('load', actualizarInventarioReal);
+
+// =======================================================
+// AXTELIX HYPER-ENGINE V5 | BOSS MODE READY
+// Pásame la siguiente parte desde el "SUPABASE CONFIG"
+// =======================================================
+
+    /**
+ * ==============================================================================
+ * 💎 AXTELIX HYPER-ENGINE V5 | BÚNKER EDITION (Cero Llaves)
+ * ==============================================================================
+ */
+
+// ============================================================
+// 🔌 CONEXIÓN AL BÚNKER (Reemplaza la conexión directa a Supabase)
+// ============================================================
+const bunkerReviewsFetch = async (ruta, options = {}) => {
+    const intentar = async (urlBunker) => {
+        const res = await fetch(`${urlBunker}/${ruta}`, {
+            headers: { 'Content-Type': 'application/json' },
+            ...options
+        });
+        if (!res.ok) throw new Error("Fallo en búnker");
+        const text = await res.text();
+        return text ? JSON.parse(text) : [];
+    };
+
+    try {
+        // Intenta con el servidor Principal (Oregon)
+        return await intentar(CONFIG_SISTEMA.bunker.urlA);
+    } catch (e) {
+        console.warn("⚠️ Búnker A ocupado. Cargando reseñas desde Búnker B...");
+        // Si falla, salta al de Respaldo (Ohio)
+        return await intentar(CONFIG_SISTEMA.bunker.urlB);
+    }
+};
+
+// ============================================================
+// 🚀 AXTELIX ENGINE
+// ============================================================
+class AxtelixEngine {
+
+    constructor() {
+        this.votesKey  = 'axtelix_votes_v5';
+        this.adminKey  = 'axtelix_boss_mode';
+
+        this.database  = [];
+        this.userVotes = JSON.parse(localStorage.getItem(this.votesKey)) || {};
+        this.isAdmin   = localStorage.getItem(this.adminKey) === 'true';
+
+        this.currentFilter       = 'all';
+        this.selectedStars       = 0;
+        this.uploadedImageBase64 = null;
+        this.maxChars            = 180; 
+        this.maxNameChars        = 20;
+
+        this.DOM = {
+            track:         document.getElementById('axtTrack'),
+            viewport:      document.getElementById('axtViewport'),
+            modal:         document.getElementById('axtModalReview'),
+            starGroup:     document.getElementById('starInputGroup'),
+            starDisplay:   document.getElementById('starValueDisplay'),
+            inputName:     document.getElementById('axtInputName'),
+            inputText:     document.getElementById('axtInputText'),
+            imgPreview:    document.getElementById('imgPreview'),
+            inputFile:     document.getElementById('axtInputImg'),
+            wordCount:     document.getElementById('wordCount'),
+            wordBar:       document.getElementById('wordBar'),
+            nameCharCount: document.getElementById('nameCharCount'),
+            avgRating:     document.getElementById('avgRating'),
+            globalStars:   document.getElementById('globalStars'),
+            barsContainer: document.getElementById('ratingBarsContainer'),
+            notify:        document.getElementById('axtNotify'),
+            btnPrev:       document.getElementById('btnPrevAxt'),
+            btnNext:       document.getElementById('btnNextAxt')
+        };
+
+        this.init();
+    }
+
+    async init() {
+        if (!this.DOM.track) return;
+
+        const splashtexts = [
+            "Nota de salida: Bergamota italiana. Nota de fondo: Éxito puro.",
+            "Dato Curioso: Las Dunk nacieron en 1985 para el basketball colegial.",
+            "Sincronizando con los servidores de la moda en Milán...",
+            "Dato: Un par de Dunk nuevos aumenta la dopamina en un 100%.",
+            "Certificando autenticidad: El estándar Axtelix es innegociable."
+        ];
+
+        const randomSplash = splashtexts[Math.floor(Math.random() * splashtexts.length)];
+
+        this.setupEventListeners();
+        this.buildStarPicker();
+        await this.loadFromSupabase();
+        this.showToast(randomSplash, 'success');
+    }
+
+    // ----------------------------------------------------------
+    // BÚNKER — LEER
+    // ----------------------------------------------------------
+    async loadFromSupabase() {
+        this.DOM.track.innerHTML = `
+            <div style="padding:50px;color:#555;font-family:'Syncopate';text-align:center;width:100%;letter-spacing:3px;">
+                CARGANDO RIELE...
+            </div>`;
+        try {
+            const data = await bunkerReviewsFetch('obtener-reviews');
+            this.database = data;
+            this.renderRiele();
+            this.updateDashboard();
+        } catch (e) {
+            console.error('Error cargando reviews:', e);
+            this.DOM.track.innerHTML = `
+                <div style="padding:50px;color:#ff4444;font-family:'Syncopate';text-align:center;width:100%;letter-spacing:2px;">
+                    ERROR DE CONEXIÓN
+                </div>`;
+        }
+    }
+
+    // ----------------------------------------------------------
+    // BÚNKER — GUARDAR
+    // ----------------------------------------------------------
+    async saveToSupabase(entry) {
+        const data = await bunkerReviewsFetch('guardar-review', {
+            method: 'POST',
+            body:   JSON.stringify(entry)
+        });
+        return data[0] || data;
+    }
+
+    // ----------------------------------------------------------
+    // BÚNKER — VOTOS
+    // ----------------------------------------------------------
+    async updateVoteInSupabase(id, field, newValue) {
+        await bunkerReviewsFetch('votar-review', {
+            method: 'POST',
+            body:   JSON.stringify({ id, field, newValue })
+        });
+    }
+
+    // ----------------------------------------------------------
+    // BÚNKER — BORRAR (ADMIN)
+    // ----------------------------------------------------------
+    async deleteFromSupabase(id) {
+        await bunkerReviewsFetch('borrar-review', {
+            method: 'POST',
+            body:   JSON.stringify({ id })
+        });
+    }
+
+    // ----------------------------------------------------------
+    // EVENT LISTENERS Y UTILIDADES (SIN CAMBIOS)
+    // ----------------------------------------------------------
+    setupEventListeners() {
+        if (this.DOM.inputText) this.DOM.inputText.addEventListener('input', (e) => this.handleWordCount(e));
+        if (this.DOM.inputName) {
+            this.DOM.inputName.addEventListener('input', () => {
+                const len = this.DOM.inputName.value.length;
+                if (this.DOM.nameCharCount) {
+                    this.DOM.nameCharCount.innerText = len;
+                    this.DOM.nameCharCount.style.color = len >= this.maxNameChars ? 'var(--gold-primary)' : '#555';
+                }
+            });
+        }
+        if (this.DOM.inputFile) this.DOM.inputFile.addEventListener('change', (e) => this.handleImageUpload(e));
+        if (this.DOM.btnPrev && this.DOM.btnNext && this.DOM.viewport) {
+            this.DOM.btnNext.addEventListener('click', () => this.DOM.viewport.scrollBy({ left: 350, behavior: 'smooth' }));
+            this.DOM.btnPrev.addEventListener('click', () => this.DOM.viewport.scrollBy({ left: -350, behavior: 'smooth' }));
+        }
+    }
+
+    showToast(message, type = 'info') {
+        if (!this.DOM.notify) return;
+        this.DOM.notify.innerText        = message;
+        this.DOM.notify.style.color      = type === 'error' ? '#ff4444' : 'var(--gold-primary)';
+        this.DOM.notify.style.borderColor= type === 'error' ? '#ff4444' : 'var(--gold-primary)';
+        this.DOM.notify.classList.add('show');
+        setTimeout(() => this.DOM.notify.classList.remove('show'), 3000);
+    }
+
+    buildStarPicker() {
+        this.DOM.starGroup.innerHTML = '';
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('i');
+            star.className    = 'far fa-star';
+            star.style.cssText = 'cursor:pointer; transition:0.3s; color:#333;';
+
+            star.addEventListener('mouseenter', () => this.highlightStars(i, true));
+            star.addEventListener('mouseleave', () => this.highlightStars(this.selectedStars, false));
+            star.addEventListener('click', () => {
+                this.selectedStars = i;
+                this.highlightStars(i, false);
+                this.DOM.starDisplay.innerText   = `${i}.0 Estrellas VIP`;
+                this.DOM.starDisplay.style.color = 'var(--gold-primary)';
+                star.classList.add('animate__animated', 'animate__heartBeat');
+                setTimeout(() => star.classList.remove('animate__animated', 'animate__heartBeat'), 1000);
+            });
+            this.DOM.starGroup.appendChild(star);
+        }
+    }
+
+    highlightStars(count, isHover) {
+        const stars = this.DOM.starGroup.querySelectorAll('i');
+        stars.forEach((s, index) => {
+            if (index < count) {
+                s.className    = 'fas fa-star';
+                s.style.color  = isHover ? 'var(--gold-light)' : 'var(--gold-primary)';
+                s.style.filter = 'drop-shadow(0 0 5px rgba(212,175,55,0.5))';
+            } else {
+                s.className    = 'far fa-star';
+                s.style.color  = '#333';
+                s.style.filter = 'none';
+            }
+        });
+    }
+
+    handleWordCount(e) {
+        const text  = e.target.value;
+        const count = text.length; 
+        this.DOM.wordCount.innerText = count;
+        const pct = Math.min((count / this.maxChars) * 100, 100);
+        this.DOM.wordBar.style.width = `${pct}%`;
+
+        if (count > this.maxChars) {
+            this.DOM.wordCount.style.color    = '#ff4444';
+            this.DOM.wordBar.style.background = '#ff4444';
+        } else if (count >= 165) {
+            this.DOM.wordCount.style.color    = '#00e676';
+            this.DOM.wordBar.style.background = '#00e676';
+        } else {
+            this.DOM.wordCount.style.color    = '#666';
+            this.DOM.wordBar.style.background = 'var(--gold-primary)';
+        }
+    }
+
+    handleImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            this.showToast('Formato inválido. Solo imágenes.', 'error');
+            return;
+        }
+        const reader  = new FileReader();
+        reader.onload = (ev) => {
+            this.uploadedImageBase64 = ev.target.result;
+            this.DOM.imgPreview.innerHTML = `
+                <div style="width:100%;height:120px;border-radius:10px;overflow:hidden;">
+                    <img src="${this.uploadedImageBase64}" style="width:100%;height:100%;object-fit:cover;">
+                </div>`;
+            this.DOM.imgPreview.style.padding = '0';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, tag => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        }[tag] || tag));
+    }
+
+    async submitReview() {
+        const rawName = this.DOM.inputName.value;
+        const rawText = this.DOM.inputText.value;
+        const chars   = rawText.length;
+
+        if (!rawName.trim())                    return this.showToast('Ingresa tu Alias VIP.', 'error');
+        if (rawName.length > this.maxNameChars) return this.showToast(`Alias máximo ${this.maxNameChars} caracteres.`, 'error');
+        if (!rawText.trim())                    return this.showToast('Escribe tu experiencia.', 'error');
+        if (this.selectedStars === 0)           return this.showToast('Selecciona una calificación.', 'error');
+        if (chars > this.maxChars)              return this.showToast(`Máximo ${this.maxChars} caracteres permitidos.`, 'error');
+
+        const cleanName = this.escapeHTML(rawName).toUpperCase();
+        const cleanText = this.escapeHTML(rawText);
+
+        const newEntry = {
+            name:     cleanName,
+            text:     cleanText,
+            stars:    this.selectedStars,
+            image:    this.uploadedImageBase64,
+            likes:    0,
+            dislikes: 0,
+            date:     new Date().toLocaleDateString('es-MX', { year:'numeric', month:'short', day:'numeric' })
+        };
+
+        this.showToast('Subiendo experiencia...', 'info');
+
+        try {
+            const saved = await this.saveToSupabase(newEntry);
+            this.database.unshift(saved);
+            this.toggleModal();
+            this.renderRiele();
+            this.updateDashboard();
+            this.resetForm();
+            this.showToast('Experiencia desplegada en el Riele. 🔥', 'success');
+        } catch (e) {
+            console.error(e);
+            this.showToast('Error al guardar. Intenta de nuevo.', 'error');
+        }
+    }
+
+    renderRiele() {
+        this.DOM.track.innerHTML = '';
+
+        let filteredDB = this.database;
+        if (this.currentFilter === 'pos') filteredDB = this.database.filter(r => r.stars >= 4);
+        if (this.currentFilter === 'neg') filteredDB = this.database.filter(r => r.stars < 4);
+
+        if (filteredDB.length === 0) {
+            this.DOM.track.innerHTML = `
+                <div style="padding:50px;color:#555;font-family:'Syncopate';text-align:center;width:100%;letter-spacing:3px;">
+                    NO HAY DATOS EN ESTE SECTOR
+                </div>`;
+            return;
+        }
+
+        filteredDB.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'axt-card animate__animated animate__fadeInRight';
+            card.style.animationDelay = `${index * 0.12}s`;
+
+            const hasLiked    = this.userVotes[item.id] === 'like';
+            const hasDisliked = this.userVotes[item.id] === 'dislike';
+
+            const imageHTML = item.image
+                ? `<div class="axt-image-container"><img src="${item.image}" loading="lazy"></div>`
+                : '';
+
+            const deleteBtn = this.isAdmin
+                ? `<button onclick="axtApp.deletePost(${item.id})"
+                    style="background:none;border:1px solid rgba(255,68,68,0.3);color:#ff4444;
+                           font-size:10px;cursor:pointer;padding:4px 10px;border-radius:6px;
+                           transition:0.3s;"
+                    onmouseover="this.style.background='rgba(255,68,68,0.1)'"
+                    onmouseout="this.style.background='none'">
+                    <i class="fas fa-trash"></i> DELETE
+                   </button>`
+                : '';
+
+            card.innerHTML = `
+                <div class="axt-card-inner" onclick="this.parentElement.classList.toggle('is-flipped')">
+                    <div class="axt-card-front">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                            <div style="display:flex;gap:2px;">${this.generateStaticStars(item.stars)}</div>
+                            <div class="axt-reaction-bar" onclick="event.stopPropagation()">
+                                <button onclick="axtApp.handleVote(${item.id},'like')" class="${hasLiked ? 'voted' : ''}">
+                                    <i class="fas fa-arrow-up"></i> ${item.likes}
+                                </button>
+                                <button onclick="axtApp.handleVote(${item.id},'dislike')" class="${hasDisliked ? 'voted' : ''}">
+                                    <i class="fas fa-arrow-down"></i> ${item.dislikes}
+                                </button>
+                            </div>
+                        </div>
+                        <p style="font-size:13px;color:#ddd;line-height:1.6;flex-grow:1;font-weight:300;">
+                            "${item.text}"
+                        </p>
+                        ${imageHTML}
+                        <div style="margin-top:20px;display:flex;justify-content:space-between;align-items:flex-end;">
+                            <div>
+                                <span style="display:block;color:var(--gold-primary);font-weight:900;font-size:12px;letter-spacing:1px;">
+                                    @${item.name}
+                                </span>
+                                <span style="font-size:9px;color:#555;">${item.date}</span>
+                            </div>
+                            ${deleteBtn}
+                        </div>
+                    </div>
+                    <div class="axt-card-back">
+                        <i class="fas fa-crown" style="font-size:45px;color:var(--gold-primary);margin-bottom:20px;filter:drop-shadow(0 0 15px var(--gold-glow-strong));"></i>
+                        <h3 style="color:var(--gold-primary);font-family:'Syncopate';font-size:14px;letter-spacing:3px;">AXTELIX</h3>
+                        <h4 style="color:#fff;font-size:10px;letter-spacing:5px;margin-top:5px;">ELITE CERTIFIED</h4>
+                        <div style="margin-top:30px;width:80%;height:1px;background:var(--border-gold);"></div>
+                        <p style="font-size:9px;color:#444;margin-top:15px;text-transform:uppercase;letter-spacing:2px;">Block ID: ${item.id}</p>
+                    </div>
+                </div>`;
+            this.DOM.track.appendChild(card);
+        });
+    }
+
+    updateDashboard() {
+        if (this.database.length === 0) {
+            this.DOM.avgRating.innerText       = '0.0';
+            this.DOM.globalStars.innerHTML     = this.generateStaticStars(0);
+            this.DOM.barsContainer.innerHTML   = '';
+            return;
+        }
+
+        const totalStars = this.database.reduce((acc, curr) => acc + curr.stars, 0);
+        const avg        = (totalStars / this.database.length).toFixed(1);
+
+        this.DOM.avgRating.innerText   = avg;
+        this.DOM.globalStars.innerHTML = this.generateStaticStars(Math.round(avg));
+        this.DOM.barsContainer.innerHTML = '';
+
+        for (let i = 5; i >= 1; i--) {
+            const count = this.database.filter(r => r.stars === i).length;
+            const pct   = (count / this.database.length) * 100;
+            this.DOM.barsContainer.innerHTML += `
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <span style="font-size:11px;font-weight:700;color:#666;width:15px;">${i}</span>
+                    <i class="fas fa-star" style="color:var(--gold-primary);font-size:10px;"></i>
+                    <div style="flex-grow:1;background:var(--glass-light);height:5px;border-radius:10px;overflow:hidden;">
+                        <div style="width:${pct}%;background:var(--gold-primary);height:100%;transition:1s ease-out;"></div>
+                    </div>
+                </div>`;
+        }
+    }
+
+    async handleVote(id, type) {
+        if (this.userVotes[id]) return; 
+
+        const index = this.database.findIndex(r => r.id === id);
+        if (index === -1) return;
+
+        const field    = type === 'like' ? 'likes' : 'dislikes';
+        const newValue = this.database[index][field] + 1;
+
+        this.database[index][field] = newValue;
+        this.userVotes[id]          = type;
+        localStorage.setItem(this.votesKey, JSON.stringify(this.userVotes));
+        this.renderRiele();
+
+        try {
+            await this.updateVoteInSupabase(id, field, newValue);
+        } catch (e) {
+            console.error('Error actualizando voto:', e);
+            this.database[index][field]--;
+            delete this.userVotes[id];
+            localStorage.setItem(this.votesKey, JSON.stringify(this.userVotes));
+            this.renderRiele();
+            this.showToast('Error al votar. Intenta de nuevo.', 'error');
+        }
+    }
+
+    async deletePost(id) {
+        if (!confirm('System Override: ¿Eliminar este registro permanentemente?')) return;
+        try {
+            await this.deleteFromSupabase(id);
+            this.database = this.database.filter(r => r.id !== id);
+            this.renderRiele();
+            this.updateDashboard();
+            this.showToast('Registro eliminado.', 'success');
+        } catch (e) {
+            console.error(e);
+            this.showToast('Error al eliminar.', 'error');
+        }
+    }
+
+    generateStaticStars(rating) {
+        let html = '';
+        for (let i = 1; i <= 5; i++) {
+            html += rating >= i
+                ? `<i class="fas fa-star" style="color:var(--gold-primary);font-size:12px;filter:drop-shadow(0 0 2px var(--gold-glow-strong));"></i>`
+                : `<i class="far fa-star" style="color:#333;font-size:12px;"></i>`;
+        }
+        return html;
+    }
+
+    filterReviews(type) {
+        this.currentFilter = type;
+        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        this.renderRiele();
+    }
+
+    toggleModal() {
+        const isHidden = window.getComputedStyle(this.DOM.modal).display === 'none';
+        this.DOM.modal.style.display = isHidden ? 'flex' : 'none';
+    }
+
+    resetForm() {
+        this.DOM.inputName.value  = '';
+        this.DOM.inputText.value  = '';
+        if (this.DOM.nameCharCount) this.DOM.nameCharCount.innerText = '0';
+        this.DOM.wordCount.innerText      = '0';
+        this.DOM.wordBar.style.width      = '0%';
+        this.DOM.wordBar.style.background = 'var(--gold-primary)';
+        this.selectedStars       = 0;
+        this.uploadedImageBase64 = null;
+        this.buildStarPicker();
+        this.DOM.starDisplay.innerText   = '0.0';
+        this.DOM.starDisplay.style.color = '#888';
+        this.DOM.imgPreview.innerHTML = `
+            <div class="upload-icon-circle"><i class="fas fa-cloud-upload-alt"></i></div>
+            <p>ADJUNTAR FOTOGRAFÍA VIP</p>
+            <span>Formatos: JPG, PNG, WEBP</span>`;
+        this.DOM.imgPreview.style.padding = '';
+    }
+}
+
+// ============================================================
+// 🚀 ARRANQUE
+// ============================================================
+const axtApp = new AxtelixEngine();
+
+window.toggleAxtModal  = () => axtApp.toggleModal();
+window.submitAxtReview = () => axtApp.submitReview();
+window.filterReviews   = (type) => axtApp.filterReviews(type);
+
+window.enableAxtBossMode = () => {
+    localStorage.setItem('axtelix_boss_mode', 'true');
+    axtApp.isAdmin = true;
+    axtApp.renderRiele();
+    axtApp.showToast('Boss Mode Activated.', 'success');
+};
+
+// ============================================================
+// 🛑 AXTELIX ANTI-FLICKER ULTIMATUM (SOLO MÓVIL)
+// ============================================================
+const stopAxtelixFlicker = () => {
+    if (window.innerWidth <= 768) {
+        const styleId = 'axt-stop-flicker';
+        if (document.getElementById(styleId)) return;
+
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.innerHTML = `
+            .axt-card, .axt-card-inner, .axt-card-front, .axt-card-back {
+                transition: none !important; transform: none !important; perspective: none !important;
+                -webkit-backface-visibility: visible !important; backface-visibility: visible !important; will-change: auto !important;
+            }
+            .axt-card-inner { display: block !important; position: relative !important; }
+            .axt-card-front { display: block !important; }
+            .axt-card-back { display: none !important; }
+            .is-flipped .axt-card-front { display: none !important; }
+            .is-flipped .axt-card-back { display: flex !important; flex-direction: column; justify-content: center; align-items: center; }
+            #axtViewport { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; contain: content; }
+        `;
+        document.head.appendChild(style);
+    }
+};
+
+window.addEventListener('load', stopAxtelixFlicker);
+window.addEventListener('resize', stopAxtelixFlicker);
+stopAxtelixFlicker();
+
+// ============================================================
+
+
+
+
+    </script>
+    <a href="https://wa.me/527206181781?text=Hola%20Axtelix,%20Me%20Gustaria%20Mas%20Informacion%20Acerca%20De%20Los%20Productos%20Que%20Tienen%20Disponibles%20Actualmente" 
+   style="position:fixed; width:55px; height:55px; bottom:25px; right:25px; background-color:#25d366; color:#FFF; border-radius:50px; text-align:center; font-size:30px; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index:10000; display:flex; align-items:center; justify-content:center; text-decoration:none;" 
+   target="_blank">
+   <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width: 35px;">
+</a>
+</body>
+</html>
