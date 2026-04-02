@@ -32,9 +32,10 @@ http.createServer((req, res) => {
 // ==========================================
 const client = new Client({
     authStrategy: new LocalAuth(),
-    authTimeoutMs: 60000, // <-- Extra time para que no crashee al logear
+    authTimeoutMs: 120000, // <-- Subimos a 120s para mayor estabilidad
     puppeteer: {
-        headless: true, // <-- INDISPENSABLE para servidores
+        headless: true,
+        executablePath: '/usr/bin/google-chrome-stable', // <-- Obliga a Render a usar el Chrome instalado
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -42,8 +43,9 @@ const client = new Client({
             '--disable-accelerated-2d-canvas',
             '--no-first-run',
             '--no-zygote',
-            '--single-process', // <-- Ahorra muchísima RAM
-            '--disable-gpu'
+            '--single-process',
+            '--disable-gpu',
+            '--disable-extensions' // <-- Agregamos esta para ahorrar más RAM
         ],
     }
 });
