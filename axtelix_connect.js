@@ -1,20 +1,23 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const axios = require('axios');
-const http = require('http'); // <-- IMPORTANTE: Nueva librería para el puerto
+const http = require('http');
 
 // ==========================================
 // BÚNKER DE SEGURIDAD (Variables de Entorno)
 // ==========================================
 const MI_NUMERO_PERSONAL = process.env.MI_NUMERO_PERSONAL; 
 const URL_RENDER = process.env.URL_RENDER; 
-const PORT = process.env.PORT || 3000; // <-- Lee el puerto de Render o usa 3000
+const PORT = process.env.PORT || 3000;
 
 // Sistema de seguridad: Si olvidas poner las variables en la nube, el bot te avisa
 if (!MI_NUMERO_PERSONAL || !URL_RENDER) {
     console.error("❌ ERROR DE BÚNKER: Faltan las variables MI_NUMERO_PERSONAL o URL_RENDER.");
     process.exit(1);
 }
+
+// 🔥 CORRECCIÓN CLAVE: Limpiar la URL por si acaso pusiste un "/" al final en Render
+const BASE_URL = URL_RENDER.replace(/\/$/, "");
 
 // ==========================================
 // SERVIDOR DE MANTENIMIENTO (Evita que Render mate el bot)
@@ -32,10 +35,9 @@ http.createServer((req, res) => {
 // ==========================================
 const client = new Client({
     authStrategy: new LocalAuth(),
-    authTimeoutMs: 180000, // <-- Te sugiero 180s (3 min) porque Docker tarda en abrir Chromium
+    authTimeoutMs: 180000, // 3 mins para darle tiempo a Chromium en Docker
     puppeteer: {
         headless: true,
-        // CAMBIA ESTA LÍNEA AQUÍ ABAJO:
         executablePath: '/usr/bin/chromium', 
         args: [
             '--no-sandbox',
@@ -57,7 +59,7 @@ client.on('qr', (qr) => {
 });
 
 client.on('ready', () => {
-    console.log('🚀 Axtelix Bridge está EN LÍNEA desde la nube y conectado al Cerebro...');
+    console.log(`🚀 Axtelix Bridge está EN LÍNEA y apuntando al Cerebro: ${BASE_URL}`);
 });
 
 client.on('message', async (msg) => {
@@ -68,11 +70,14 @@ client.on('message', async (msg) => {
     console.log(`📩 Mensaje de ${msg.from}: ${msg.body}`);
 
     try {
-        // Antes quizás decía /whatsapp, cámbialo a /webhook-whatsapp
-const response = await axios.post(`${URL_RENDER}/webhook-whatsapp`, {
-    mensaje: msg.body,
-    numero: msg.from
-});
+        // 1. Enviar el mensaje de WhatsApp a tu servidor de Render (Cerebro IA)
+        const response = await axios.post(`${BASE_URL}/webhook-whatsapp`, {
+            mensaje: msg.body,
+            numero: msg.from
+        }, {
+            // Le damos 60s de paciencia por si el backend de Python está "dormido"
+            timeout: 60000 
+        });
 
         const { respuesta, notificar_luis } = response.data;
 
@@ -88,7 +93,11 @@ const response = await axios.post(`${URL_RENDER}/webhook-whatsapp`, {
         }
 
     } catch (error) {
-        console.error('❌ Error de conexión con Render:', error.message);
+        console.error('❌ Error de conexión con Render (Python):', error.message);
+        // Si hay error 404 o 500, esto nos dirá exactamente qué se rompió en los logs
+        if (error.response) {
+            console.error('Detalles del rebote:', error.response.status, error.response.data);
+        }
     }
 });
 
