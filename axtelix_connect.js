@@ -68,11 +68,11 @@ client.on('message', async (msg) => {
     console.log(`📩 Mensaje de ${msg.from}: ${msg.body}`);
 
     try {
-        // 1. Enviar el mensaje de WhatsApp a tu servidor de Render (Cerebro IA)
-        const response = await axios.post(`${URL_RENDER}/webhook-whatsapp`, {
-            mensaje: msg.body,
-            numero: msg.from
-        });
+        // Antes quizás decía /whatsapp, cámbialo a /webhook-whatsapp
+const response = await axios.post(`${URL_RENDER}/webhook-whatsapp`, {
+    mensaje: msg.body,
+    numero: msg.from
+});
 
         const { respuesta, notificar_luis } = response.data;
 
