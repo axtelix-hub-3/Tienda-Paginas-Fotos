@@ -21,7 +21,7 @@ if (!MI_NUMERO_PERSONAL || !URL_RENDER) {
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        // Estas banderas son OBLIGATORIAS para que no crashee en Northflank
+        headless: true, // <-- INDISPENSABLE para servidores
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -29,6 +29,7 @@ const client = new Client({
             '--disable-accelerated-2d-canvas',
             '--no-first-run',
             '--no-zygote',
+            '--single-process', // <-- Esto ahorra muchísima RAM en Render
             '--disable-gpu'
         ],
     }
