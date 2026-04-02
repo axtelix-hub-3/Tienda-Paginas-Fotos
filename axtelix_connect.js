@@ -1,25 +1,38 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const axios = require('axios');
+const http = require('http'); // <-- IMPORTANTE: Nueva librería para el puerto
 
 // ==========================================
 // BÚNKER DE SEGURIDAD (Variables de Entorno)
 // ==========================================
-// Ahora el código leerá esto directamente desde los settings de Northflank
 const MI_NUMERO_PERSONAL = process.env.MI_NUMERO_PERSONAL; 
 const URL_RENDER = process.env.URL_RENDER; 
+const PORT = process.env.PORT || 3000; // <-- Lee el puerto de Render o usa 3000
 
-// Sistema de seguridad: Si olvidas poner las variables en Northflank, el bot te avisa
+// Sistema de seguridad: Si olvidas poner las variables en la nube, el bot te avisa
 if (!MI_NUMERO_PERSONAL || !URL_RENDER) {
     console.error("❌ ERROR DE BÚNKER: Faltan las variables MI_NUMERO_PERSONAL o URL_RENDER.");
     process.exit(1);
 }
 
 // ==========================================
+// SERVIDOR DE MANTENIMIENTO (Evita que Render mate el bot)
+// ==========================================
+http.createServer((req, res) => {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.write('Axtelix Bridge is Alive! 🚀');
+    res.end();
+}).listen(PORT, () => {
+    console.log(`📡 Servidor dummy running en el puerto ${PORT}`);
+});
+
+// ==========================================
 // INICIALIZACIÓN DEL CLIENTE (Optimizado para la Nube)
 // ==========================================
 const client = new Client({
     authStrategy: new LocalAuth(),
+    authTimeoutMs: 60000, // <-- Extra time para que no crashee al logear
     puppeteer: {
         headless: true, // <-- INDISPENSABLE para servidores
         args: [
@@ -29,14 +42,14 @@ const client = new Client({
             '--disable-accelerated-2d-canvas',
             '--no-first-run',
             '--no-zygote',
-            '--single-process', // <-- Esto ahorra muchísima RAM en Render
+            '--single-process', // <-- Ahorra muchísima RAM
             '--disable-gpu'
         ],
     }
 });
 
 client.on('qr', (qr) => {
-    console.log('✨ ESCANEA ESTE QR DESDE LOS LOGS DE NORTHFLANK:');
+    console.log('✨ ESCANEA ESTE QR:');
     qrcode.generate(qr, {small: true});
 });
 
