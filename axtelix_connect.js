@@ -32,10 +32,11 @@ http.createServer((req, res) => {
 // ==========================================
 const client = new Client({
     authStrategy: new LocalAuth(),
-    authTimeoutMs: 120000, // <-- Subimos a 120s para mayor estabilidad
+    authTimeoutMs: 180000, // <-- Te sugiero 180s (3 min) porque Docker tarda en abrir Chromium
     puppeteer: {
         headless: true,
-        executablePath: '/usr/bin/google-chrome-stable', // <-- Obliga a Render a usar el Chrome instalado
+        // CAMBIA ESTA LÍNEA AQUÍ ABAJO:
+        executablePath: '/usr/bin/chromium', 
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -45,7 +46,7 @@ const client = new Client({
             '--no-zygote',
             '--single-process',
             '--disable-gpu',
-            '--disable-extensions' // <-- Agregamos esta para ahorrar más RAM
+            '--disable-extensions'
         ],
     }
 });
